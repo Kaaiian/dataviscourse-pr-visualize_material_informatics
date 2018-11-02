@@ -1,5 +1,31 @@
 
 
+
+.ptable_view {
+    display: inline-block;
+    width: 90%;
+    position: relative;
+}
+
+.act_vs_pred_view {
+    display: inline-block;
+    width: 45%;
+    position: relative;
+}
+
+.line_graph_view {
+    display: inline-block;
+    width: 45%;
+    position: relative;
+}
+
+.tsne_view {
+    display: inline-block;
+    width: 80%;
+    position: relative;
+}
+
+
 body {
     font-family: Lato;
     padding:40px;
@@ -13,9 +39,11 @@ h1 {
     padding: 0px;
     margin-left: 20px;
 }
+
 .info{
     margin-left: 20px;
 }
+
 .tile {
     stroke: #FFF;
     stroke-width: 4;
@@ -27,7 +55,6 @@ h1 {
     fill: #565656;
     stroke-width: 0.1px;
 }
-
 
 .electoralVotesNote, .votesPercentageNote{
     text-anchor: middle;
@@ -78,19 +105,6 @@ h1 {
     float:right;
 }
 
-.electoralVotes{
-    stroke: #eee;
-}
-
-.middlePoint{
-    stroke: #eee;
-}
-
-.fullView{
-    display: inline-block;
-    width: 100%;
-}
-
 .yearChart{
     stroke: #FFF;
 }
@@ -99,16 +113,19 @@ h1 {
     stroke:#000;
     stroke-dasharray: 4;
 }
+
 .republican{
     fill: #de2d26;
     color: #de2d26;
     text-anchor:start;
 }
+
 .democrat{
     fill: #3182bd;
     color: #3182bd;
     text-anchor:start;
 }
+
 .independent{
     fill: #45AD6A;
     color: #45AD6A;
@@ -131,7 +148,7 @@ h1 {
 .selected{
     stroke: #404040;;
     stroke-width:4;
-    r:25px;
+    r:15px;
 }
 
 
