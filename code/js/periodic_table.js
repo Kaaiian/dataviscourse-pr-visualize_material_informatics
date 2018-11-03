@@ -19,6 +19,17 @@ class Periodic_table {
             .attr("height", this.svgHeight)
         this.ptable = ptable;
 
+
+        let legendHeight = 20;
+        //add the svg to the div
+        let legend = d3.select("#legend").classed("tile_view",true);
+
+        // creates svg elements within the div
+        this.legendSvg = legend.append("svg")
+                            .attr("width",this.svgWidth)
+                            .attr("height",legendHeight)
+                            .attr("transform", "translate(" + this.margin.left + ",0)");
+
     };
 
     /**
@@ -37,6 +48,8 @@ class Periodic_table {
             return "independent";
         }
     }
+
+
 
 
 
@@ -69,9 +82,14 @@ class Periodic_table {
         //HINT: Use the .republican, .democrat and .independent classes to style your elements.
         //Creates a legend element and assigns a scale that needs to be visualized
         this.svg.selectAll("*").remove();
-        let ptable_bars = this.svg
+        var ptable_bars = this.svg
             .append("g")
             .attr("id", "ptable_bars");
+
+        var barChart_bars = this.svg
+            .append("g")
+            .attr("id", "barChart_bars");
+
         
         let bars = ptable_bars.selectAll('g').data(this.ptable).enter().append('g');
         console.log(bars)
@@ -85,7 +103,7 @@ class Periodic_table {
             .attr('height',heightCur*0.9)
             .attr('width', widthCur*0.9 )  
             .attr('class',"tile")      
-            .style('fill',d =>'#'+d.data*888888)
+            .style('fill',d =>colorScale(d.count));
 
         
 
@@ -96,6 +114,7 @@ class Periodic_table {
             .attr("x", d=> d.column*widthCur+widthCur*0.3)
             .attr('class', d => d.symbol + " tilestext")
             .style('font-size', d=>heightCur*0.4+'px')
+            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
             .text(d =>  d.symbol)
 
         
@@ -106,6 +125,7 @@ class Periodic_table {
             .attr("x", d=> d.column*widthCur+widthCur*0.5)
             .attr('class',"tilestext")
             .style('font-size', d=>heightCur*0.2+'px')
+            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
             .text(d =>  d.name);
 
         bars            
@@ -113,12 +133,27 @@ class Periodic_table {
             .on("mouseover", click)
             .on("mouseout", notclick);
 
+        let legendQuantile = d3.legendColor()
+            .shapeWidth((this.svgWidth - 2*this.margin.left - this.margin.right)/12)
+            .cells(20)
+            .orient('vertical')
+            .labelFormat(d3.format('.1r'))
+            .scale(colorScale);
+
 
         function click(d) {
             console.log("clicked")
             var selectedCircle = d3.select(this).select('rect')
-            selectedCircle.classed("highlighted",true);
-            console.log(d.symbol)
+            if (d.count >0){
+                selectedCircle.classed("highlighted",true);
+                console.log(d.symbol)
+                d3.csv("data/element_data/"+d.symbol+".csv").then(elementTable => {
+                    console.log(elementTable);
+                    updateBarsCharts(elementTable);
+                });
+
+            }
+           
             /*d3.csv("data/year_timeline_"+d.YEAR+".csv").then(electionResult => {
                 console.log(electionResult);
                 electoralVoteChart.update(electionResult, colorScale);
@@ -131,35 +166,20 @@ class Periodic_table {
             var selectedCircle = d3.select(this).select('rect')
             selectedCircle.classed("highlighted",false);
         }
+
+        function updateBarsCharts(residualTable){
+            console.log("shtting check");
+            console.log(barChart_bars);
     
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+        };
 
 
             
     };
+
+    
 
 
 }

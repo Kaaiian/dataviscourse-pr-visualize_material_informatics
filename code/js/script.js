@@ -12,13 +12,19 @@ let electoralVoteChart = new ElectoralVoteChart(shiftChart);*/
 d3.csv("data/ptable.csv").then(ptable => {
     console.log(ptable);
     //Domain definition for global color scale
-    let domain = [-60, -50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60];
+    function rangefuc(start, end, len) {
+        var step = Math.floor((end - start) / len)
+        return Array(len).fill().map((_, idx) => start + (idx * step))
+      }
+      let domain1 = rangefuc(0,1800,13);
+      var domain =  [-100, 1, 10, 40, 80, 200, 500, 1000 ,1600];
+      console.log(domain);
 
     //Color range for global color scale
-    let range = ["#063e78", "#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15", "#860308"];
+    let range = ['#f7fcfd','#fff3f3','#ccece6','#99d8c9','#66c2a4','#41ae76','#238b45','#006d2c','#00441b'];
 
     //ColorScale be used consistently by all the charts
-    var colorScale = d3.scaleQuantile()
+    var colorScale = d3.scaleLinear()
         .domain(domain)
         .range(range);
             
