@@ -82,9 +82,28 @@ class Periodic_table {
         //HINT: Use the .republican, .democrat and .independent classes to style your elements.
         //Creates a legend element and assigns a scale that needs to be visualized
         this.svg.selectAll("*").remove();
+        let widthCur = parseInt(this.svgWidth/20);
+        let heightCur =parseInt(this.svgHeight/12);
+        var domain1 =  [0, 1, 10, 40, 80, 200, 500, 1000 ,1600];
+
+
         var ptable_bars = this.svg
             .append("g")
             .attr("id", "ptable_bars");
+
+        var color_bars = this.svg
+            .append("g")
+            .attr("id", "color_bars");
+
+        let c_bars =  color_bars.selectAll('rect').data(domain1);
+        c_bars.enter()
+            .append('rect')
+            .attr('x', (d,i)=>widthCur*10+i*20)
+            .attr('y', heightCur*1)
+            .attr('width',20)
+            .attr('height', function(d){if(d>1){return Math.log2(d)*15} return d*15;})
+            .style('fill', d=>colorScale(d));
+
 
         var barChart_bars = this.svg
             .append("g")
@@ -93,8 +112,8 @@ class Periodic_table {
         
         let bars = ptable_bars.selectAll('g').data(this.ptable).enter().append('g');
         console.log(bars)
-        let widthCur = parseInt(this.svgWidth/20);
-        let heightCur =parseInt(this.svgHeight/12);
+        
+
 
         bars
             .append("rect")
