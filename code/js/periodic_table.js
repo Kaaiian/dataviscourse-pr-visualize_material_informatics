@@ -6,11 +6,11 @@ class Periodic_table {
      * @param ptable instance of ptable
      * and to populate the legend.
      */
-    constructor(ptable, act_vs_pre){
+    constructor(ptable, act_vs_pre, line_graph,info,tsne){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 20, bottom: 20, left: 50};
-        let divyearChart = d3.select("#Periodic_Table_Chart").classed("fullview", true);
+        let divyearChart = d3.select("#Periodic_Table_Chart").classed("ptable_view", true);
         this.svgBounds = divyearChart.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
         this.svgHeight = parseInt(this.svgWidth*3/5);
@@ -19,6 +19,9 @@ class Periodic_table {
             .attr("height", this.svgHeight)
         this.ptable = ptable;
         this.act_vs_pre = act_vs_pre;
+        this.line_graph = line_graph;
+        this.info = info;
+        this.tsne = tsne;
 
 
         let legendHeight = 20;
@@ -96,16 +99,45 @@ class Periodic_table {
             .append("g")
             .attr("id", "color_bars");
 
+        color_bars.append('g').attr('id', 'title_of_colors_bar');
+        let title_group = color_bars.select('#title_of_colors_bar');
+        title_group.append('text')
+            .attr('x', widthCur*10.5)
+            .attr('y', heightCur*0.2)
+            .style('font-size', d=>heightCur*0.2+'px')
+            .style('fill','black')
+            .style('text-anchor', 'middle')
+            .text(d=>"Number of Formulae Containing Each Element");
+
+
         let c_bars =  color_bars.selectAll('rect').data(domain1);
         c_bars.enter()
             .append('rect')
             .attr('x', (d,i)=>widthCur*9+i*widthCur/3)
-            .attr('y', heightCur*1)
-            .attr('width',widthCur/3-1)
+            .attr('y', heightCur*0.5)
+            .attr('width',widthCur/3)
             .attr('height', function(d){if(d>1){return d/30*heightCur/20+heightCur/4}else if(d===0){return heightCur/8} return heightCur/6;})
             .style('fill', d=>colorScale(d))
             .style( 'stroke', '#101010')
             .style('stroke-width',1);
+        // c_bars.enter()
+        //     .append('text')
+        //     .attr('x', (d,i)=>widthCur*9+i*widthCur/3+0.5*widthCur/3)
+        //     .attr('y', function(d){if(d>1){return d/30*heightCur/20+heightCur/4+heightCur*0.65}else if(d===0){return heightCur*0.65+heightCur/8} return heightCur*0.65+heightCur/6;})
+        //     .style('font-size', d=>heightCur*0.15+'px')
+        //     .style('fill','red')
+        //     .style('text-anchor', 'middle')
+        //     .text(d=>d);
+
+        var x = d3.scaleQuantile().range([0, widthCur*1/3,widthCur*2/3,widthCur*3/3,widthCur*4/3,widthCur*5/3,widthCur*6/3,widthCur*7/3,widthCur*8/3]);
+        var xDomain = x.domain(domain1);
+        let xAxis = d3.axisTop(x);
+            
+        color_bars.append('g').classed('axis', true)
+              .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.5 + ")").call(xAxis)
+              .style('font-size', d=>heightCur*0.15+'px')
+              .style('text-anchor', 'middle');
+
         
 
 
@@ -177,6 +209,8 @@ class Periodic_table {
                     console.log(elementTable);
                     updateBarsCharts(elementTable);
                     act_vs_pre.update(elementTable);
+                    tsne.update(elementTable);
+                    line_graph.update(elementTable);
                 });
 
             }
