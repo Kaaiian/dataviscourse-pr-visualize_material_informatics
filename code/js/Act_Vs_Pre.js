@@ -18,8 +18,9 @@ class Act_Vs_Pre {
             .attr("height", this.svgHeight)
             .attr('id', 'Act_Vs_Pre_Chart_svg') 
             
-        // this.svg.select('#Act_Vs_Pre_Chart_svg').append('g').attr('id', 'xaxis')
-        // this.svg.select('#Act_Vs_Pre_Chart_svg').append('g').attr('id', 'xaxis')
+        this.svg.append('g').attr('id', 'act_vs_pred_plot')
+        this.svg.append('g').attr('id', 'act_vs_pred_xaxis')
+        this.svg.append('g').attr('id', 'act_vs_pred_yaxis')
 
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
@@ -57,16 +58,23 @@ class Act_Vs_Pre {
         let maxarray2 = d3.max(predicted)
         let max = d3.max([maxarray1, maxarray2])
         
-        // let xAxis = d3.axisBottom(x);
-            
-        // .append('g').classed('axis', true)
-              // .attr('transform', "translate(0," + 50 + ")").call(xAxis);
+
         
         console.log('we got here', max)
 
         let dataScale = d3.scaleLinear()
             .domain([0, max])
             .range([this.margin.right, this.svgWidth - this.margin.right])
+        
+        let xAxis = d3.axisBottom(dataScale);
+        let yAxis = d3.axisLeft(dataScale);
+            
+        d3.select('#act_vs_pred_xaxis')
+            .attr('transform', "translate(0," + 0 + ")").call(xAxis);
+              
+        d3.select('#act_vs_pred_yaxis')
+            .attr('transform', "translate(15," + 0 + ")").call(yAxis);
+            
         
         this.tip.html((d)=> {
             let tooltip_data = {
@@ -80,7 +88,7 @@ class Act_Vs_Pre {
         });
        
         
-        let group = d3.select('#Act_Vs_Pre_Chart_svg')
+        let group = d3.select('#act_vs_pred_plot')
         let circ = group.selectAll('circle').data(element_data)
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
