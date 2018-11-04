@@ -102,7 +102,7 @@ class Periodic_table {
             .attr('x', (d,i)=>widthCur*9+i*widthCur/3)
             .attr('y', heightCur*1)
             .attr('width',widthCur/3-1)
-            .attr('height', function(d){if(d>1){return Math.log2(d)*heightCur/4}else if(d===0){return heightCur/8} return d*heightCur/4;})
+            .attr('height', function(d){if(d>1){return d/30*heightCur/20+heightCur/4}else if(d===0){return heightCur/8} return heightCur/6;})
             .style('fill', d=>colorScale(d))
             .style( 'stroke', '#101010')
             .style('stroke-width',1);
