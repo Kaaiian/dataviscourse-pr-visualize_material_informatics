@@ -51,7 +51,6 @@ class Act_vs_pred {
 
             return this.tooltip_render(tooltip_data)
         });
-
         
         let group = d3.select('#Act_Vs_Pre_Chart_svg')
         let circ = group.selectAll('circle').data(element_data)
