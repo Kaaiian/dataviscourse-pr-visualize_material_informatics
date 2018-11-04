@@ -56,7 +56,8 @@ h1 {
     stroke-width: 0.1px;
 }
 
-.electoralVotesNote, .votesPercentageNote{
+circle.act_vs_pred{
+    fill-opacity: 0.2;
     text-anchor: middle;
     font-size: 18px;
 }
