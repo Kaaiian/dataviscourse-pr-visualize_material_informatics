@@ -17,6 +17,9 @@ class Act_Vs_Pre {
             .attr("width", this.svgWidth)
             .attr("height", this.svgHeight)
             .attr('id', 'Act_Vs_Pre_Chart_svg') 
+            
+        // this.svg.select('#Act_Vs_Pre_Chart_svg').append('g').attr('id', 'xaxis')
+        // this.svg.select('#Act_Vs_Pre_Chart_svg').append('g').attr('id', 'xaxis')
 
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
@@ -37,8 +40,32 @@ class Act_Vs_Pre {
     
     update (element_data){
         
+        console.log('got here', element_data)
+        
+        let actual = []
+        let predicted = []
+        
+        let elementData = element_data.map(formula => {
+            actual.push(parseFloat(formula['actual']))
+            predicted.push(parseFloat(formula['predicted']))
+        });
+       
+        console.log('got here as well', actual, predicted)
+        
+        
+        let maxarray1 = d3.max(actual)
+        let maxarray2 = d3.max(predicted)
+        let max = d3.max([maxarray1, maxarray2])
+        
+        // let xAxis = d3.axisBottom(x);
+            
+        // .append('g').classed('axis', true)
+              // .attr('transform', "translate(0," + 50 + ")").call(xAxis);
+        
+        console.log('we got here', max)
+
         let dataScale = d3.scaleLinear()
-            .domain([0, d3.max(d3.max(element_data['predicted']+element_data['actual']))])
+            .domain([0, max])
             .range([this.margin.right, this.svgWidth - this.margin.right])
         
         this.tip.html((d)=> {
@@ -51,18 +78,19 @@ class Act_Vs_Pre {
 
             return this.tooltip_render(tooltip_data)
         });
+       
         
         let group = d3.select('#Act_Vs_Pre_Chart_svg')
         let circ = group.selectAll('circle').data(element_data)
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
-        circ = circ.merge(new_rect)
-        circ.attr('cx', d => dataScale(d))
-            .attr('cy', d => dataScale(d))
+        circ = circ.merge(new_circ)
+        circ.attr('cx', d => dataScale(parseFloat(d['actual'])))
+            .attr('cy', d => dataScale(parseFloat(d['predicted'])))
             .attr('r', this.svgHeight/75)
             .attr('class', 'act_vs_pred ')
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
-			
+		
 	};
 }
