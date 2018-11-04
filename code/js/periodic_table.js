@@ -6,11 +6,11 @@ class Periodic_table {
      * @param ptable instance of ptable
      * and to populate the legend.
      */
-    constructor(ptable, act_vs_pre){
+    constructor(ptable, act_vs_pre, line_graph,info,tsne){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 20, bottom: 20, left: 50};
-        let divyearChart = d3.select("#Periodic_Table_Chart").classed("fullview", true);
+        let divyearChart = d3.select("#Periodic_Table_Chart").classed("ptable_view", true);
         this.svgBounds = divyearChart.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
         this.svgHeight = parseInt(this.svgWidth*3/5);
@@ -19,6 +19,9 @@ class Periodic_table {
             .attr("height", this.svgHeight)
         this.ptable = ptable;
         this.act_vs_pre = act_vs_pre;
+        this.line_graph = line_graph;
+        this.info = info;
+        this.tsne = tsne;
 
 
         let legendHeight = 20;
@@ -206,6 +209,8 @@ class Periodic_table {
                     console.log(elementTable);
                     updateBarsCharts(elementTable);
                     act_vs_pre.update(elementTable);
+                    tsne.update(elementTable);
+                    line_graph.update(elementTable);
                 });
 
             }
