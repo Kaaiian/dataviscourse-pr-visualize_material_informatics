@@ -7,6 +7,8 @@ let shiftChart = new TrendChart();
 
 let electoralVoteChart = new ElectoralVoteChart(shiftChart);*/
 
+let  act_vs_pre = new Act_Vs_Pre();
+
 //load the data corresponding to all the election years
 //pass this data and instances of all the charts that update on year selection to yearChart's constructor
 d3.csv("data/ptable.csv").then(ptable => {
@@ -28,6 +30,6 @@ d3.csv("data/ptable.csv").then(ptable => {
         .domain(domain)
         .range(range);
             
-    let periodic_table = new Periodic_table(ptable);
+    let periodic_table = new Periodic_table(ptable,act_vs_pre);
     periodic_table.update(colorScale);
 });
