@@ -98,11 +98,20 @@ class Periodic_table {
         let c_bars =  color_bars.selectAll('rect').data(domain1);
         c_bars.enter()
             .append('rect')
-            .attr('x', (d,i)=>widthCur*10+i*20)
+            .attr('x', (d,i)=>widthCur*8+i*widthCur/3)
             .attr('y', heightCur*1)
-            .attr('width',20)
-            .attr('height', function(d){if(d>1){return Math.log2(d)*15} return d*15;})
-            .style('fill', d=>colorScale(d));
+            .attr('width',widthCur/3-1)
+            .attr('height', function(d){if(d>1){return Math.log2(d)*heightCur/4} return d*heightCur/4;})
+            .style('fill', d=>colorScale(d))
+            .style( 'stroke', '#101010')
+            .style('stroke-width',1);
+        
+        var x = d3.scaleLog().range([heightCur/4, Math.log2(1600)*heightCur/4])
+                    .domain([0,1600]);
+        let xAxis = d3.axisRight(x);
+        
+        this.svg.append('g').classed('axis', true)
+            .attr('transform', "translate("+(widthCur*8+9*widthCur/3)+","+heightCur+")").call(xAxis);
 
 
         var barChart_bars = this.svg
