@@ -1,4 +1,4 @@
-class Act_vs_pred {
+class Act_Vs_Pre {
 
     /**
      * Initializes the svg elements required to lay the tiles

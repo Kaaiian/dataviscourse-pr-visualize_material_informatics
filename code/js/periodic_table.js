@@ -6,7 +6,7 @@ class Periodic_table {
      * @param ptable instance of ptable
      * and to populate the legend.
      */
-    constructor(ptable){
+    constructor(ptable, act_vs_pre){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 20, bottom: 20, left: 50};
@@ -18,6 +18,7 @@ class Periodic_table {
             .attr("width", this.svgWidth)
             .attr("height", this.svgHeight)
         this.ptable = ptable;
+        this.act_vs_pre = act_vs_pre;
 
 
         let legendHeight = 20;
@@ -98,20 +99,14 @@ class Periodic_table {
         let c_bars =  color_bars.selectAll('rect').data(domain1);
         c_bars.enter()
             .append('rect')
-            .attr('x', (d,i)=>widthCur*8+i*widthCur/3)
+            .attr('x', (d,i)=>widthCur*9+i*widthCur/3)
             .attr('y', heightCur*1)
             .attr('width',widthCur/3-1)
-            .attr('height', function(d){if(d>1){return Math.log2(d)*heightCur/4} return d*heightCur/4;})
+            .attr('height', function(d){if(d>1){return Math.log2(d)*heightCur/4}else if(d===0){return heightCur/8} return d*heightCur/4;})
             .style('fill', d=>colorScale(d))
             .style( 'stroke', '#101010')
             .style('stroke-width',1);
         
-        var x = d3.scaleLog().range([heightCur/4, Math.log2(1600)*heightCur/4])
-                    .domain([0,1600]);
-        let xAxis = d3.axisRight(x);
-        
-        this.svg.append('g').classed('axis', true)
-            .attr('transform', "translate("+(widthCur*8+9*widthCur/3)+","+heightCur+")").call(xAxis);
 
 
         var barChart_bars = this.svg
@@ -181,6 +176,7 @@ class Periodic_table {
                 d3.csv("data/element_data/"+d.symbol+".csv").then(elementTable => {
                     console.log(elementTable);
                     updateBarsCharts(elementTable);
+                    act_vs_pre.update(elementTable);
                 });
 
             }
