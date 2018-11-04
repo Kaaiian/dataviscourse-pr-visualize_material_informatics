@@ -60,7 +60,7 @@ for element in df_ptable['symbol']:
         df_elem = df_data[df_data['elements'].str.contains("'" + element + "'")]
     #    df_elem.to_csv(two_up + '/code/data/element_data/'+element+'.csv', index=False)
     
-        bins =  np.linspace(df_elem['residual'].min(), df_elem['residual'].max()+0.001, 21)
+        bins = np.linspace(df_elem['residual'].min(), df_elem['residual'].max()+0.001, 21)
         df_elem['bin_number'] = pd.cut(df_elem['residual'], 20, labels=list(np.arange(0, 20, 1)))
         df_elem['bin_range'] = pd.cut(df_elem['residual'], bins)
         df_elem_hist = pd.DataFrame()
@@ -72,4 +72,8 @@ for element in df_ptable['symbol']:
         df_elem_hist.to_csv(two_up + '/code/data/hist_data/'+element+'_hist.csv', index=False)
     except:
         df_elem_hist = pd.DataFrame()
+        df_elem_hist['bin_count'] = np.zeros(20)
+        df_elem_hist['bin_freq'] = np.zeros(20)
+        df_elem_hist['bin_range'] = pd.cut(pd.Series(np.linspace(-4.99, 5+0.001, 20)), np.linspace(-5, 5+0.001, 21))
+        df_elem_hist['bin_number'] = pd.cut(pd.Series(np.linspace(-4.99, 5+0.001, 20)), 20, labels=list(np.arange(0, 20, 1)))
         df_elem_hist.to_csv(two_up + '/code/data/hist_data/'+element+'_hist.csv', index=False)

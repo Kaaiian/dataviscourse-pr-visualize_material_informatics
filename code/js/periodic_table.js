@@ -130,7 +130,8 @@ class Periodic_table {
         bars
             .append('text')
             .attr("y", d=> d.row*heightCur+heightCur*0.5)
-            .attr("x", d=> d.column*widthCur+widthCur*0.3)
+            .attr("x", d=> d.column*widthCur)
+            .attr("dx", d=> widthCur*0.05)
             .attr('class', d => d.symbol + " tilestext")
             .style('font-size', d=>heightCur*0.4+'px')
             .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
@@ -141,8 +142,10 @@ class Periodic_table {
         bars
             .append('text')
             .attr("y", d=> d.row*heightCur+heightCur*0.7)
-            .attr("x", d=> d.column*widthCur+widthCur*0.5)
-            .attr('class',"tilestext")
+            .attr("x", d=> d.column*widthCur)
+            .attr("dx", d=> widthCur*0.05)
+            .attr('class', "tilestext")
+            .attr('text-anchor', 'start')
             .style('font-size', d=>heightCur*0.2+'px')
             .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
             .text(d =>  d.name);

@@ -50,7 +50,7 @@ h1 {
 }
 
 .yeartext, .tilestext, .brushtext{
-    text-anchor: middle;
+    text-anchor: start;
     font-size: 24px;
     fill: #565656;
     stroke-width: 0.1px;
