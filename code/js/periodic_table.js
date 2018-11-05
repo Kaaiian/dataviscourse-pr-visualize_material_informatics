@@ -103,7 +103,7 @@ class Periodic_table {
         let title_group = color_bars.select('#title_of_colors_bar');
         title_group.append('text')
             .attr('x', widthCur*10.5)
-            .attr('y', heightCur*0.2)
+            .attr('y', heightCur*0.3)
             .style('font-size', d=>heightCur*0.2+'px')
             .style('fill','black')
             .style('text-anchor', 'middle')
@@ -114,7 +114,7 @@ class Periodic_table {
         c_bars.enter()
             .append('rect')
             .attr('x', (d,i)=>widthCur*9+i*widthCur/3)
-            .attr('y', heightCur*0.5)
+            .attr('y', heightCur*0.6)
             .attr('width',widthCur/3)
             .attr('height', function(d){if(d>1){return d/30*heightCur/20+heightCur/4}else if(d===0){return heightCur/8} return heightCur/6;})
             .style('fill', d=>colorScale(d))
@@ -134,11 +134,15 @@ class Periodic_table {
         let xAxis = d3.axisTop(x);
             
         color_bars.append('g').classed('axis', true)
-              .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.5 + ")").call(xAxis)
-              .style('font-size', d=>heightCur*0.15+'px')
+              .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.6 + ")").call(xAxis)
+              .style('font-size', d=>heightCur*0.16+'px')
               .style('text-anchor', 'middle');
-
-        
+        let text_bars = color_bars.selectAll('g').selectAll('g').selectAll('text');
+        text_bars.attr('y', -heightCur*0.1)
+        let lines_bars = color_bars.selectAll('g').selectAll('g').selectAll('line');
+        lines_bars.attr('y2', -heightCur*0.05)
+        console.log('Watch next line')
+        console.log(text_bars)
 
 
         var barChart_bars = this.svg
@@ -147,7 +151,7 @@ class Periodic_table {
 
         
         let bars = ptable_bars.selectAll('g').data(this.ptable).enter().append('g');
-        console.log(bars)
+
         
 
 
@@ -209,8 +213,8 @@ class Periodic_table {
                     console.log(elementTable);
                     updateBarsCharts(elementTable);
                     act_vs_pre.update(elementTable);
-                    tsne.update(elementTable);
-                    line_graph.update(elementTable);
+                    //tsne.update(elementTable);
+                    //line_graph.update(elementTable);
                 });
 
             }
