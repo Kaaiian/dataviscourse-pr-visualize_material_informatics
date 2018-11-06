@@ -8,7 +8,7 @@ class Act_Vs_Pre {
     constructor(){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
-        this.margin = {top: 10, right: 20, bottom: 20, left: 50};
+        this.margin = {top: 25, right: 25, bottom: 25, left: 25};
         let actPred = d3.select("#Act_Vs_Pre_Chart").classed("act_vs_pred_view", true);
         this.svgBounds = actPred.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
@@ -18,9 +18,16 @@ class Act_Vs_Pre {
             .attr("height", this.svgHeight)
             .attr('id', 'Act_Vs_Pre_Chart_svg') 
             
-        this.svg.append('g').attr('id', 'act_vs_pred_plot')
-        this.svg.append('g').attr('id', 'act_vs_pred_xaxis')
-        this.svg.append('g').attr('id', 'act_vs_pred_yaxis')
+        let plot_area = this.svg.append('g').attr('id', 'act_vs_pred_plot')
+        let plot_data = this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_data')
+        plot_data.attr('transform', 'translate(0,' + this.svgHeight + ') scale(1, -1) ')
+        this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_xaxis')
+        this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'top_xaxis')
+        this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'bottom_xaxis')
+
+        this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_yaxis')
+        this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'left_yaxis')
+        this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'right_yaxis')
 
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
@@ -65,16 +72,29 @@ class Act_Vs_Pre {
         let dataScale = d3.scaleLinear()
             .domain([0, max])
             .range([this.margin.right, this.svgWidth - this.margin.right])
-        
-        let xAxis = d3.axisBottom(dataScale);
-        let yAxis = d3.axisLeft(dataScale);
+
+        let xScale = d3.scaleLinear()
+            .domain([0, max])
+            .range([this.margin.right, this.svgWidth - this.margin.right])
+
+        let yScale = d3.scaleLinear()
+            .domain([max, 0])     
+            .range([this.margin.right, this.svgWidth - this.margin.right])
+
+        let xAxis_bottom = d3.axisBottom(xScale);
+        let xAxis_top = d3.axisTop(xScale);
+        let yAxis_left = d3.axisLeft(yScale);
+        let yAxis_right = d3.axisRight(yScale);
             
-        d3.select('#act_vs_pred_xaxis')
-            .attr('transform', "translate(0," + 0 + ")").call(xAxis);
+        d3.select('#bottom_xaxis')
+            .attr('transform', "translate(0," + (this.svgHeight - this.margin.top)  + ")").call(xAxis_bottom)
+        d3.select('#top_xaxis')
+            .attr('transform', "translate(0," + this.margin.top  + ")").call(xAxis_top);
               
-        d3.select('#act_vs_pred_yaxis')
-            .attr('transform', "translate(15," + 0 + ")").call(yAxis);
-            
+        d3.select('#left_yaxis')
+            .attr('transform', "translate("+this.margin.left+"," + 0 + ")").call(yAxis_left);
+        d3.select('#right_yaxis')
+            .attr('transform', "translate("+(this.svgWidth - this.margin.left )+"," + 0 + ")").call(yAxis_right);
         
         this.tip.html((d)=> {
             let tooltip_data = {
@@ -88,7 +108,7 @@ class Act_Vs_Pre {
         });
        
         
-        let group = d3.select('#act_vs_pred_plot')
+        let group = d3.select('#act_vs_pred_data')
         let circ = group.selectAll('circle').data(element_data)
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
@@ -96,7 +116,7 @@ class Act_Vs_Pre {
         circ.attr('cx', d => dataScale(parseFloat(d['actual'])))
             .attr('cy', d => dataScale(parseFloat(d['predicted'])))
             .attr('r', this.svgHeight/75)
-            .attr('class', 'act_vs_pred ')
+            .attr('class', d => 'act_vs_pred ' + d['formula'])
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
 		
