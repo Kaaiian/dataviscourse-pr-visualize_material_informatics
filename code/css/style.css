@@ -3,14 +3,16 @@
 
 .ptable_view {
     display: inline-block;
-    width: 70%;
+    width: 60%;
     position: relative;
+    vertical-align: top;
 }
 
 .act_vs_pred_view {
     display: inline-block;
-    width: 45%;
+    width: 35%;
     position: relative;
+    vertical-align: top;
 }
 
 .line_graph_view {

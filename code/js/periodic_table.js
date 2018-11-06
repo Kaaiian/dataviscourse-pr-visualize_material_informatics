@@ -9,7 +9,7 @@ class Periodic_table {
     constructor(ptable, act_vs_pre, line_graph,info,tsne){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
-        this.margin = {top: 10, right: 20, bottom: 20, left: 50};
+        this.margin = {top: 10, right: 5, bottom: 20, left: 5};
         let divyearChart = d3.select("#Periodic_Table_Chart").classed("ptable_view", true);
         this.svgBounds = divyearChart.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
@@ -23,6 +23,11 @@ class Periodic_table {
         this.info = info;
         this.tsne = tsne;
 
+        /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
+        d3.csv("data/experimental_predictions.csv").then(element_data => {
+            console.log('update act_vs_pred', element_data)
+            this.act_vs_pre.update(element_data);
+        });
 
         let legendHeight = 20;
         //add the svg to the div
