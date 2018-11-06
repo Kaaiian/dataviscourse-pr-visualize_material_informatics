@@ -59,7 +59,6 @@ h1 {
 }
 
 circle.act_vs_pred{
-    fill-opacity: 0.2;
     text-anchor: middle;
     font-size: 18px;
 }

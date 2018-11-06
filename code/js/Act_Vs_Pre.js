@@ -8,7 +8,7 @@ class Act_Vs_Pre {
     constructor(){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
-        this.margin = {top: 25, right: 25, bottom: 25, left: 25};
+        this.margin = {top: 10, right: 10, bottom: 25, left: 25};
         let actPred = d3.select("#Act_Vs_Pre_Chart").classed("act_vs_pred_view", true);
         this.svgBounds = actPred.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
@@ -47,55 +47,83 @@ class Act_Vs_Pre {
     }
     
     update (element_data){
-        
-        console.log('got here', element_data)
+
+
         
         let actual = []
         let predicted = []
+        let residual = []
         
         let elementData = element_data.map(formula => {
             actual.push(parseFloat(formula['actual']))
             predicted.push(parseFloat(formula['predicted']))
+            residual.push(parseFloat(formula['residual']))
+
         });
        
         console.log('got here as well', actual, predicted)
         
-        
         let maxarray1 = d3.max(actual)
         let maxarray2 = d3.max(predicted)
-        let max = d3.max([maxarray1, maxarray2])
-        
 
+        let max_residual = d3.max(residual)
+        let min_residual = d3.min(residual)
+        let max_band_gap = d3.max([maxarray1, maxarray2])
+
+        console.log('residual_scale', max_residual, min_residual)
         
-        console.log('we got here', max)
+        let colorScaleResidual = d3.scaleLinear()
+            .domain([2, 0, -2])
+            .range(['#fc8d59', '#999999', '#91bfdb'])
 
         let dataScale = d3.scaleLinear()
-            .domain([0, max])
-            .range([this.margin.right, this.svgWidth - this.margin.right])
+            .domain([0, max_band_gap])
+            .range([this.margin.left, this.svgWidth - this.margin.right])
 
         let xScale = d3.scaleLinear()
-            .domain([0, max])
-            .range([this.margin.right, this.svgWidth - this.margin.right])
+            .domain([0, max_band_gap])
+            .range([this.margin.left, this.svgWidth - this.margin.right])
+            .nice()
 
         let yScale = d3.scaleLinear()
-            .domain([max, 0])     
-            .range([this.margin.right, this.svgWidth - this.margin.right])
+            .domain([max_band_gap, 0])     
+            .range([this.margin.top, this.svgHeight - this.margin.bottom])
+            .nice()
 
-        let xAxis_bottom = d3.axisBottom(xScale);
-        let xAxis_top = d3.axisTop(xScale);
-        let yAxis_left = d3.axisLeft(yScale);
-        let yAxis_right = d3.axisRight(yScale);
+        let xAxis_bottom = d3.axisBottom(xScale).tickSizeOuter(0);
+        let xAxis_top = d3.axisTop(xScale).tickSizeOuter(0);
+        let yAxis_left = d3.axisLeft(yScale).tickSizeOuter(0);
+        let yAxis_right = d3.axisRight(yScale).tickSizeOuter(0);
             
-        d3.select('#bottom_xaxis')
-            .attr('transform', "translate(0," + (this.svgHeight - this.margin.top)  + ")").call(xAxis_bottom)
-        d3.select('#top_xaxis')
-            .attr('transform', "translate(0," + this.margin.top  + ")").call(xAxis_top);
-              
-        d3.select('#left_yaxis')
-            .attr('transform', "translate("+this.margin.left+"," + 0 + ")").call(yAxis_left);
-        d3.select('#right_yaxis')
-            .attr('transform', "translate("+(this.svgWidth - this.margin.left )+"," + 0 + ")").call(yAxis_right);
-        
+        /* Here I format the axis so they look nice */
+        let xAxis_B = d3.select('#bottom_xaxis')
+            .attr('transform', "translate(0," + (this.svgHeight - this.margin.bottom)  + ")")
+            .call(xAxis_bottom)
+            xAxis_B.selectAll(".tick line")
+                .attr("transform", "scale(1,-1)")
+
+        let xAxis_T = d3.select('#top_xaxis')
+            .attr('transform', "translate(0," + this.margin.top  + ")")
+            .call(xAxis_top)
+        xAxis_T.selectAll("text")
+            .remove();
+        xAxis_T.selectAll(".tick line")
+            .attr("transform", "scale(1,-1)")  
+
+        let yAxis_L = d3.select('#left_yaxis')
+            .attr('transform', "translate("+this.margin.left+"," + 0 + ")")
+            .call(yAxis_left)
+        yAxis_L.selectAll(".tick line")
+            .attr("transform", "scale(-1,1)");
+
+        let yAxis_R = d3.select('#right_yaxis')
+            .attr('transform', "translate("+(this.svgWidth - this.margin.right )+"," + 0 + ")")
+            .call(yAxis_right)
+        yAxis_R.selectAll("text")
+            .remove();
+        yAxis_R.selectAll(".tick line")
+            .attr("transform", "scale(-1,1)")
+
         this.tip.html((d)=> {
             let tooltip_data = {
                     "result":[
@@ -106,7 +134,6 @@ class Act_Vs_Pre {
 
             return this.tooltip_render(tooltip_data)
         });
-       
         
         let group = d3.select('#act_vs_pred_data')
         let circ = group.selectAll('circle').data(element_data)
@@ -116,6 +143,8 @@ class Act_Vs_Pre {
         circ.attr('cx', d => dataScale(parseFloat(d['actual'])))
             .attr('cy', d => dataScale(parseFloat(d['predicted'])))
             .attr('r', this.svgHeight/75)
+            .attr('fill', d => colorScaleResidual(d['residual']))
+            .attr('fill-opacity', d => 1)
             .attr('class', d => 'act_vs_pred ' + d['formula'])
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
