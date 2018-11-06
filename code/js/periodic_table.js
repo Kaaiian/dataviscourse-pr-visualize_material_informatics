@@ -136,7 +136,7 @@ class Periodic_table {
 
         var x = d3.scaleQuantile().range([0, widthCur*1/3,widthCur*2/3,widthCur*3/3,widthCur*4/3,widthCur*5/3,widthCur*6/3,widthCur*7/3,widthCur*8/3]);
         var xDomain = x.domain(domain1);
-        let xAxis = d3.axisTop(x);
+        let xAxis = d3.axisTop(x).tickSizeOuter(0);
             
         color_bars.append('g').classed('axis', true)
               .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.6 + ")").call(xAxis)
@@ -145,9 +145,7 @@ class Periodic_table {
         let text_bars = color_bars.selectAll('g').selectAll('g').selectAll('text');
         text_bars.attr('y', -heightCur*0.1)
         let lines_bars = color_bars.selectAll('g').selectAll('g').selectAll('line');
-        lines_bars.attr('y2', -heightCur*0.05)
-        console.log('Watch next line')
-        console.log(text_bars)
+        lines_bars.attr('y2', -heightCur*0.06)
 
 
         var barChart_bars = this.svg
