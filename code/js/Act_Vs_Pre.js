@@ -32,17 +32,28 @@ class Act_Vs_Pre {
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
 			.offset(function() {
-				return [0,0];
+				return [50,50];
 			});
+            
+        this.svg.call(this.tip)
     };
 
     tooltip_render (tooltip_data) {
     let text = "<ul>";
     tooltip_data.result.forEach((row)=>{
-        text += "<li class = " + this.chooseClass(row.party)+ ">" 
-             + row.nominee+":\t\t"+row.votecount+"\t("+row.percentage+")" + 
-             "</li>"
+        text += "<li class = " + 'formula' + ">" 
+             + 'formula' +":\t\t" + row.formula + 
+             "</li>" + "<li class = " + 'formula' + ">" +
+            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            +  "</li>" + 
+             "</li>" + "<li class = " + 'formula' + ">" +
+            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            +  "</li>" + 
+             "</li>" + "<li class = " + 'formula' + ">" +
+            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            +  "</li>" 
     });
+    console.log(text)
     return text;
     }
     
@@ -127,8 +138,7 @@ class Act_Vs_Pre {
         this.tip.html((d)=> {
             let tooltip_data = {
                     "result":[
-                    {"nominee": d.D_Nominee_prop,"votecount": d.D_Votes_Total,"percentage": d.D_PopularPercentage,"party":"D"} ,
-                    {"nominee": d.R_Nominee_prop,"votecount": d.R_Votes_Total,"percentage": d.R_PopularPercentage,"party":"R"}
+                    {"formula": d.formula,"actual": parseFloat(d.actual).toPrecision(4),"predicted": parseFloat(d.predicted).toPrecision(4),"residual": parseFloat(d.residual).toPrecision(4)}
                     ]
                 }
 
@@ -148,6 +158,7 @@ class Act_Vs_Pre {
             .attr('class', d => 'act_vs_pred ' + d['formula'])
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
+            
 		
 	};
 }
