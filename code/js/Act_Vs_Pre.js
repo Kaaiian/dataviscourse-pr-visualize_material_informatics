@@ -85,7 +85,7 @@ class Act_Vs_Pre {
         
         let colorScaleResidual = d3.scaleLinear()
             .domain([2, 0, -2])
-            .range(['#fc8d59', '#999999', '#91bfdb'])
+            .range(['#fc8d59', 'gray', '#91bfdb'])
 
         let dataScale = d3.scaleLinear()
             .domain([0, max_band_gap])
