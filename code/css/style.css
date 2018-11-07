@@ -27,6 +27,9 @@
     position: relative;
 }
 
+.not_selected {
+    fill-opacity: 0.4
+}
 
 body {
     font-family: Lato;

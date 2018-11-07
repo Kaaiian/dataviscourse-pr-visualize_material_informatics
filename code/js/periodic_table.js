@@ -38,7 +38,6 @@ class Periodic_table {
                             .attr("width",this.svgWidth)
                             .attr("height",legendHeight)
                             .attr("transform", "translate(" + this.margin.left + ",0)");
-
     };
 
     /**
@@ -195,7 +194,7 @@ class Periodic_table {
 
         bars            
             .on('click', click)
-            .on("mouseover", click)
+            .on("mouseover", hover)
             .on("mouseout", notclick);
 
         let legendQuantile = d3.legendColor()
@@ -204,7 +203,6 @@ class Periodic_table {
             .orient('vertical')
             .labelFormat(d3.format('.1r'))
             .scale(colorScale);
-
 
         function click(d) {
             console.log("clicked")
@@ -228,6 +226,11 @@ class Periodic_table {
                 votePercentageChart.update(electionResult);
                 tileChart.update(electionResult, colorScale);
             });*/
+        }
+
+        function hover(d) {
+            console.log(d)
+            d3.select('#act_vs_pred_data').selectAll('circle').selectAll("*:not(."+d.symbol+')').classed('selected', true)
         }
 
         function notclick() {

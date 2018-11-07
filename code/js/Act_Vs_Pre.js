@@ -44,13 +44,13 @@ class Act_Vs_Pre {
         text += "<li class = " + 'formula' + ">" 
              + 'formula' +":\t\t" + row.formula + 
              "</li>" + "<li class = " + 'formula' + ">" +
-            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            "Band gap:\t\t"+row.actual
             +  "</li>" + 
              "</li>" + "<li class = " + 'formula' + ">" +
-            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            "Predicted Band gap:\t\t"+row.predicted
             +  "</li>" + 
              "</li>" + "<li class = " + 'formula' + ">" +
-            "Band gap:\t\t"+row.predicted+"\t("+row.residual+")"  
+            "Residual:\t\t"+row.residual 
             +  "</li>" 
     });
     console.log(text)
@@ -58,8 +58,14 @@ class Act_Vs_Pre {
     }
     
     update (element_data){
+        this.update_hover(element_data)
+    }
 
 
+
+
+
+    update_hover (element_data){
         
         let actual = []
         let predicted = []
@@ -159,6 +165,5 @@ class Act_Vs_Pre {
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
             
-		
 	};
 }
