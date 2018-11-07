@@ -22,6 +22,7 @@ class Periodic_table {
         this.line_graph = line_graph;
         this.info = info;
         this.tsne = tsne;
+        this.selectedElements = []
 
         /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
         d3.csv("data/experimental_predictions.csv").then(element_data => {
@@ -193,7 +194,7 @@ class Periodic_table {
             .text(d =>  d.name);
 
         bars            
-            .on('click', click)
+            .on('click', onClick)
             .on("mouseover", hoverOver)
             .on("mouseout", hoverOff);
 
@@ -204,9 +205,12 @@ class Periodic_table {
             .labelFormat(d3.format('.1r'))
             .scale(colorScale);
 
+
+
         function click(d) {
             console.log("clicked")
             var selectedCircle = d3.select(this).select('rect')
+
             if (d.count >0){
                 selectedCircle.classed("highlighted",true);
                 console.log(d.symbol)
@@ -227,6 +231,40 @@ class Periodic_table {
                 tileChart.update(electionResult, colorScale);
             });*/
         }
+
+        let that = this
+        function onClick(d){
+
+            let selected = d3.select(this).select('rect')  
+            if (that.selectedElements.includes(d.symbol)){
+                var index = that.selectedElements.indexOf(d.symbol);
+                if (index !== -1) that.selectedElements.splice(d.symbol, 1);
+                selected.classed("highlighted",false);
+            }else{
+                that.selectedElements.push(d.symbol)
+                selected.classed("highlighted",true);
+            }
+
+            console.log('current selection:', that.selectedElements)
+
+            if (that.selectedElements.length == 0){
+                d3.csv("data/experimental_predictions.csv").then(element_data => {
+                    // console.log('update act_vs_pred', element_data)
+                    that.act_vs_pre.update(element_data);
+                });
+            }else{
+                
+                // Need this part of the code to combine the csv's for selected elements and save as dataList
+                // let dataList = combinedCSV
+                // act_vs_pre.update(dataList);
+
+                d3.csv("data/element_data/"+d.symbol+".csv").then(elementTable => {
+                    updateBarsCharts(elementTable);
+                    act_vs_pre.update(elementTable);
+
+                });
+            }
+        }   
 
         function hoverOver(d) {
             let selected_data = d3.selectAll('#act_vs_pred_data')
