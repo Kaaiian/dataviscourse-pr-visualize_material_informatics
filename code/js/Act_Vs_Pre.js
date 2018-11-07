@@ -161,7 +161,7 @@ class Act_Vs_Pre {
             .attr('r', this.svgHeight/75)
             .attr('fill', d => colorScaleResidual(d['residual']))
             .attr('fill-opacity', d => 1)
-            .attr('class', d => 'act_vs_pred ' + d['formula'])
+            .attr('class', d => 'act_vs_pred ' + d['formula'] + d['symbol'])
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
             
