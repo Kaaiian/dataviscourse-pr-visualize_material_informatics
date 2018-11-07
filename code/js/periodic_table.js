@@ -231,6 +231,7 @@ class Periodic_table {
         function hoverOver(d) {
             let selected_data = d3.selectAll('#act_vs_pred_data')
                 .selectAll("*:not(."+d.symbol+')')
+                .lower()
                 .classed('not_selected', true)
         }
 
