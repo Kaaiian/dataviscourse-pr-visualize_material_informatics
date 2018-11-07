@@ -194,8 +194,8 @@ class Periodic_table {
 
         bars            
             .on('click', click)
-            .on("mouseover", hover)
-            .on("mouseout", notclick);
+            .on("mouseover", hoverOver)
+            .on("mouseout", hoverOff);
 
         let legendQuantile = d3.legendColor()
             .shapeWidth((this.svgWidth - 2*this.margin.left - this.margin.right)/12)
@@ -228,9 +228,16 @@ class Periodic_table {
             });*/
         }
 
-        function hover(d) {
-            console.log(d)
-            d3.select('#act_vs_pred_data').selectAll('circle').selectAll("*:not(."+d.symbol+')').classed('selected', true)
+        function hoverOver(d) {
+            let selected_data = d3.selectAll('#act_vs_pred_data')
+                .selectAll("*:not(."+d.symbol+')')
+                .classed('not_selected', true)
+        }
+
+        function hoverOff(d) {
+            let selected_data = d3.selectAll('#act_vs_pred_data')
+                .selectAll("*:not(."+d.symbol+')')
+                .classed('not_selected', false)
         }
 
         function notclick() {

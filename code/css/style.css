@@ -27,9 +27,6 @@
     position: relative;
 }
 
-.not_selected {
-    fill-opacity: 0.4
-}
 
 body {
     font-family: Lato;
@@ -151,10 +148,16 @@ circle.act_vs_pred{
 }
 
 .selected{
-    stroke: #404040;;
+    stroke: #404040;
     stroke-width:4;
     r:15px;
 }
+
+.not_selected {
+    fill-opacity: 0.3;
+    fill: #abe2a6;
+}
+
 
 
 h2{
