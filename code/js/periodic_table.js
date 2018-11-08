@@ -235,10 +235,22 @@ class Periodic_table {
         let that = this
         function onClick(d){
 
-            let selected = d3.select(this).select('rect')  
+            function removeA(arr) {
+                var what, a = arguments, L = a.length, ax;
+                while (L > 1 && arr.length) {
+                    what = a[--L];
+                    while ((ax= arr.indexOf(what)) !== -1) {
+                        arr.splice(ax, 1);
+                    }
+                }
+                return arr;
+            }
+
+            let selected = d3.select(this).select('rect')
             if (that.selectedElements.includes(d.symbol)){
-                var index = that.selectedElements.indexOf(d.symbol);
-                if (index !== -1) that.selectedElements.splice(d.symbol, 1);
+                console.log('preremoval', that.selectedElements)
+                console.log('postremoval', removeA(that.selectedElements, d.symbol))
+                that.selectedElements = removeA(that.selectedElements, d.symbol)
                 selected.classed("highlighted",false);
             }else{
                 that.selectedElements.push(d.symbol)
@@ -248,21 +260,26 @@ class Periodic_table {
             console.log('current selection:', that.selectedElements)
 
             if (that.selectedElements.length == 0){
-                d3.csv("data/experimental_predictions.csv").then(element_data => {
-                    // console.log('update act_vs_pred', element_data)
-                    that.act_vs_pre.update(element_data);
-                });
+                let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
+                circle_data.style('visibility', 'visible')
+                circle_data.classed('clicked', false)
             }else{
                 
                 // Need this part of the code to combine the csv's for selected elements and save as dataList
                 // let dataList = combinedCSV
                 // act_vs_pre.update(dataList);
 
-                d3.csv("data/element_data/"+d.symbol+".csv").then(elementTable => {
-                    updateBarsCharts(elementTable);
-                    act_vs_pre.update(elementTable);
-
-                });
+                let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
+                circle_data.classed('clicked', false)
+                that.selectedElements.forEach(d => {
+                    let selected_elements = d3.selectAll('#act_vs_pred_data')
+                        .selectAll("."+d)
+                        .classed('clicked', true)
+                    console.log('selected elements', selected_elements, d)
+                })
+                console.log('am I gere?', d3.selectAll('#act_vs_pred_data').selectAll('circles'))
+                circle_data.style('visibility', 'hidden')
+                d3.selectAll('#act_vs_pred_data').selectAll('.clicked').style('visibility', 'visible')
             }
         }   
 
