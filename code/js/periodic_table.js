@@ -285,17 +285,24 @@ class Periodic_table {
 
         function hoverOver(d) {
             let selected_data = d3.selectAll('#act_vs_pred_data')
-                .selectAll("*:not(."+d.symbol+')')
+
+            selected_data.selectAll("*:not(."+d.symbol+')')
                 .lower()
                 .classed('not_selected', true)
+            selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
         }
 
         function hoverOff(d) {
             let selected_data = d3.selectAll('#act_vs_pred_data')
-                .selectAll("*:not(."+d.symbol+')')
+            selected_data.selectAll("*:not(."+d.symbol+')')
                 .classed('not_selected', false)
-        }
 
+            selected_data.selectAll('.'+d.symbol).lower().classed('selected', false)
+            if (that.selectedElements.length == 0){
+            }else{
+            d3.selectAll('#act_vs_pred_data').selectAll("*:not(.clicked)").style('visibility', 'hidden')
+            }
+        }
         function notclick() {
             var selectedCircle = d3.select(this).select('rect')
             selectedCircle.classed("highlighted",false);

@@ -59,6 +59,7 @@ h1 {
 }
 
 circle.act_vs_pred{
+    opacity: 0.5;
     text-anchor: middle;
     font-size: 18px;
 }
@@ -150,7 +151,10 @@ circle.act_vs_pred{
 .selected{
     stroke: #404040;
     stroke-width:4;
-    r:15px;
+}
+
+circle.selected{
+    fill-opacity: 0.9;
 }
 
 .not_selected {
