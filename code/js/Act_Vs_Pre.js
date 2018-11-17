@@ -24,13 +24,12 @@ class Act_Vs_Pre {
         this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'top_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'bottom_xaxis')
-        this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'xlabel').append('text').text('Actual').attr("transform", "translate(" + this.svgWidth + "," + this.svgHeight + ")")
+        this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'xlabel').append('text').text('Actual').attr("transform", "translate(" + this.svgWidth/2 + "," + this.svgHeight*0.8 + ")")
 
         this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'left_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'right_yaxis')
-        this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'ylabel').append('text').text('Actual')
-
+        this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'ylabel').append('text').text('Actual').attr("transform", "translate(" + this.svgWidth/15 + "," + this.svgHeight*0.5 + ")")
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
 			.offset(function() {
