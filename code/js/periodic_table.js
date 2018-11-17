@@ -233,76 +233,19 @@ class Periodic_table {
         }
 
         let that = this
+        
         function onClick(d){
-
-            function removeA(arr) {
-                var what, a = arguments, L = a.length, ax;
-                while (L > 1 && arr.length) {
-                    what = a[--L];
-                    while ((ax= arr.indexOf(what)) !== -1) {
-                        arr.splice(ax, 1);
-                    }
-                }
-                return arr;
-            }
-
-            let selected = d3.select(this).select('rect')
-            if (that.selectedElements.includes(d.symbol)){
-                console.log('preremoval', that.selectedElements)
-                console.log('postremoval', removeA(that.selectedElements, d.symbol))
-                that.selectedElements = removeA(that.selectedElements, d.symbol)
-                selected.classed("highlighted",false);
-            }else{
-                that.selectedElements.push(d.symbol)
-                selected.classed("highlighted",true);
-            }
-
-            console.log('current selection:', that.selectedElements)
-
-            if (that.selectedElements.length == 0){
-                let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
-                circle_data.style('visibility', 'visible')
-                circle_data.classed('clicked', false)
-            }else{
-                
-                // Need this part of the code to combine the csv's for selected elements and save as dataList
-                // let dataList = combinedCSV
-                // act_vs_pre.update(dataList);
-
-                let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
-                circle_data.classed('clicked', false)
-                that.selectedElements.forEach(d => {
-                    let selected_elements = d3.selectAll('#act_vs_pred_data')
-                        .selectAll("."+d)
-                        .classed('clicked', true)
-                    console.log('selected elements', selected_elements, d)
-                })
-                console.log('am I gere?', d3.selectAll('#act_vs_pred_data').selectAll('circles'))
-                circle_data.style('visibility', 'hidden')
-                d3.selectAll('#act_vs_pred_data').selectAll('.clicked').style('visibility', 'visible')
-            }
+            act_vs_pre.updateClick(d)
         }   
 
         function hoverOver(d) {
-            let selected_data = d3.selectAll('#act_vs_pred_data')
-
-            selected_data.selectAll("*:not(."+d.symbol+')')
-                .lower()
-                .classed('not_selected', true)
-            selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
+            act_vs_pre.hoverOver(d)
         }
-
+            
         function hoverOff(d) {
-            let selected_data = d3.selectAll('#act_vs_pred_data')
-            selected_data.selectAll("*:not(."+d.symbol+')')
-                .classed('not_selected', false)
-
-            selected_data.selectAll('.'+d.symbol).lower().classed('selected', false)
-            if (that.selectedElements.length == 0){
-            }else{
-            d3.selectAll('#act_vs_pred_data').selectAll("*:not(.clicked)").style('visibility', 'hidden')
-            }
+            act_vs_pre.hoverOff(d)
         }
+
         function notclick() {
             var selectedCircle = d3.select(this).select('rect')
             selectedCircle.classed("highlighted",false);
