@@ -115,6 +115,7 @@ class Act_Vs_Pre {
             xAxis_B.selectAll(".tick line")
                 .attr("transform", "scale(1,-1)")
 
+                
         let xAxis_T = d3.select('#top_xaxis')
             .attr('transform', "translate(0," + this.margin.top  + ")")
             .call(xAxis_top)
@@ -163,7 +164,7 @@ class Act_Vs_Pre {
             
 	};
     
-    onClick(d){
+    onClick(d, that, that2){
         
         function removeA(arr) {
             var what, a = arguments, L = a.length, ax;
@@ -176,7 +177,7 @@ class Act_Vs_Pre {
             return arr;
         }
 
-        let selected = d3.select(this).select('rect')
+        let selected = d3.select(that2).select('rect')
         if (that.selectedElements.includes(d.symbol)){
             console.log('preremoval', that.selectedElements)
             console.log('postremoval', removeA(that.selectedElements, d.symbol))
@@ -214,7 +215,7 @@ class Act_Vs_Pre {
     
     };
     
-    hoverOver(d){
+    hoverOver(d, that){
    
         let selected_data = d3.selectAll('#act_vs_pred_data')
 
@@ -225,7 +226,7 @@ class Act_Vs_Pre {
         
     };
     
-    hoverOff(d){
+    hoverOff(d, that){
 
         let selected_data = d3.selectAll('#act_vs_pred_data')
         selected_data.selectAll("*:not(."+d.symbol+')')

@@ -205,8 +205,6 @@ class Periodic_table {
             .labelFormat(d3.format('.1r'))
             .scale(colorScale);
 
-
-
         function click(d) {
             console.log("clicked")
             var selectedCircle = d3.select(this).select('rect')
@@ -235,15 +233,16 @@ class Periodic_table {
         let that = this
         
         function onClick(d){
-            act_vs_pre.updateClick(d)
+            let that2 = this
+            act_vs_pre.onClick(d, that, that2)
         }   
 
         function hoverOver(d) {
-            act_vs_pre.hoverOver(d)
+            act_vs_pre.hoverOver(d, that)
         }
             
         function hoverOff(d) {
-            act_vs_pre.hoverOff(d)
+            act_vs_pre.hoverOff(d, that)
         }
 
         function notclick() {
