@@ -233,8 +233,30 @@ class Periodic_table {
         let that = this
         
         function onClick(d){
-            let that2 = this
-            act_vs_pre.onClick(d, that, that2)
+                
+            function removeA(arr) {
+                var what, a = arguments, L = a.length, ax;
+                while (L > 1 && arr.length) {
+                    what = a[--L];
+                    while ((ax= arr.indexOf(what)) !== -1) {
+                        arr.splice(ax, 1);
+                    }
+                }
+                return arr;
+            }
+
+            let selected = d3.select(this).select('rect')
+            if (that.selectedElements.includes(d.symbol)){
+                console.log('preremoval', that.selectedElements)
+                console.log('postremoval', removeA(that.selectedElements, d.symbol))
+                that.selectedElements = removeA(that.selectedElements, d.symbol)
+                selected.classed("highlighted",false);
+            }else{
+                that.selectedElements.push(d.symbol)
+                selected.classed("highlighted",true);
+            }
+            
+            act_vs_pre.onClick(d, that)
         }   
 
         function hoverOver(d) {

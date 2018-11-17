@@ -24,10 +24,12 @@ class Act_Vs_Pre {
         this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'top_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'bottom_xaxis')
+        this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'xlabel').append('text').text('Actual').attr("transform", "translate(" + this.svgWidth + "," + this.svgHeight + ")")
 
         this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'left_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'right_yaxis')
+        this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'ylabel').append('text').text('Actual')
 
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
@@ -98,6 +100,7 @@ class Act_Vs_Pre {
             .range([this.margin.left, this.svgWidth - this.margin.right])
             .nice()
 
+            
         let yScale = d3.scaleLinear()
             .domain([max_band_gap, 0])     
             .range([this.margin.top, this.svgHeight - this.margin.bottom])
@@ -164,32 +167,8 @@ class Act_Vs_Pre {
             
 	};
     
-    onClick(d, that, that2){
+    onClick(d, that){
         
-        function removeA(arr) {
-            var what, a = arguments, L = a.length, ax;
-            while (L > 1 && arr.length) {
-                what = a[--L];
-                while ((ax= arr.indexOf(what)) !== -1) {
-                    arr.splice(ax, 1);
-                }
-            }
-            return arr;
-        }
-
-        let selected = d3.select(that2).select('rect')
-        if (that.selectedElements.includes(d.symbol)){
-            console.log('preremoval', that.selectedElements)
-            console.log('postremoval', removeA(that.selectedElements, d.symbol))
-            that.selectedElements = removeA(that.selectedElements, d.symbol)
-            selected.classed("highlighted",false);
-        }else{
-            that.selectedElements.push(d.symbol)
-            selected.classed("highlighted",true);
-        }
-
-        console.log('current selection:', that.selectedElements)
-
         if (that.selectedElements.length == 0){
             let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
             circle_data.style('visibility', 'visible')
@@ -212,7 +191,6 @@ class Act_Vs_Pre {
             circle_data.style('visibility', 'hidden')
             d3.selectAll('#act_vs_pred_data').selectAll('.clicked').style('visibility', 'visible')
         }
-    
     };
     
     hoverOver(d, that){
