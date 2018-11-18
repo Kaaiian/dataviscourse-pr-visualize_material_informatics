@@ -53,7 +53,9 @@ class TSNE {
             "Residual:\t\t"+row.residual 
             +  "</li>" 
     });
-
+    return text;
+    }
+    
     update (element_data){
         this.plot_data(element_data)
     }
