@@ -1,7 +1,7 @@
 class TSNE {
     
     constructor(){
-        // Follow the constructor method in act_vs_pred.js
+        // Follow the constructor method in tsne.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 10, bottom: 45, left: 45};
         let actPred = d3.select("#TSNE_Chart").classed("tsne_view", true);
@@ -20,14 +20,14 @@ class TSNE {
         
         // this.svg.select('#tsne_plot').append('g').attr('id', 'ideal prediction').append('line').attr('x1', this.margin.left).attr('y1', this.svgHeight-this.margin.bottom).attr('x2', this.svgWidth - this.margin.right).attr('y2', this.margin.top).attr('stroke', 'black').style("stroke-dasharray", ("3, 3"))
         
-        this.svg.select('#tsne_xaxis').append('g').attr('id', 'top_xaxis')
-        this.svg.select('#tsne_xaxis').append('g').attr('id', 'bottom_xaxis')
-        this.svg.select('#tsne_xaxis').append('g').attr('id', 'xlabel').append('text').text('Component 1').attr("transform", "translate(" + this.svgWidth*0.55 + "," + (this.svgHeight*1 - 5) + ")").style("text-anchor", "middle")
+        this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_top_xaxis')
+        this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_bottom_xaxis')
+        this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_xlabel').append('text').text('Component 1').attr("transform", "translate(" + this.svgWidth*0.55 + "," + (this.svgHeight*1 - 5) + ")").style("text-anchor", "middle")
 
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_yaxis')
-        this.svg.select('#tsne_yaxis').append('g').attr('id', 'left_yaxis')
-        this.svg.select('#tsne_yaxis').append('g').attr('id', 'right_yaxis')
-        this.svg.select('#tsne_yaxis').append('g').attr('id', 'ylabel').append('text').text('Component 1').attr("transform", "rotate(-90)").attr("x", -this.svgHeight*0.45).attr('dy', (this.svgWidth*0 + 15)).style("text-anchor", "middle")
+        this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_left_yaxis')
+        this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_right_yaxis')
+        this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_ylabel').append('text').text('Component 1').attr("transform", "rotate(-90)").attr("x", -this.svgHeight*0.45).attr('dy', (this.svgWidth*0 + 15)).style("text-anchor", "middle")
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
 			.offset(function() {
@@ -69,8 +69,8 @@ class TSNE {
         let residual = []
         
         let elementData = element_data.map(formula => {
-            component_1.push(parseFloat(formula['component1']))
-            component_2.push(parseFloat(formula['component2']))
+            component_1.push(parseFloat(formula['component_1']))
+            component_2.push(parseFloat(formula['component_2']))
             predicted.push(parseFloat(formula['predicted']))
             residual.push(parseFloat(formula['residual']))
             residual.push(parseFloat(formula['residual']))
@@ -112,14 +112,14 @@ class TSNE {
         let yAxis_right = d3.axisRight(yScale).tickSizeOuter(0);
             
         /* Here I format the axis so they look nice */
-        let xAxis_B = d3.select('#bottom_xaxis')
+        let xAxis_B = d3.select('#tsne_bottom_xaxis')
             .attr('transform', "translate(0," + (this.svgHeight - this.margin.bottom)  + ")")
             .call(xAxis_bottom)
             xAxis_B.selectAll(".tick line")
                 .attr("transform", "scale(1,-1)")
 
                 
-        let xAxis_T = d3.select('#top_xaxis')
+        let xAxis_T = d3.select('#tsne_top_xaxis')
             .attr('transform', "translate(0," + this.margin.top  + ")")
             .call(xAxis_top)
         xAxis_T.selectAll("text")
@@ -127,13 +127,13 @@ class TSNE {
         xAxis_T.selectAll(".tick line")
             .attr("transform", "scale(1,-1)")  
 
-        let yAxis_L = d3.select('#left_yaxis')
+        let yAxis_L = d3.select('#tsne_left_yaxis')
             .attr('transform', "translate("+this.margin.left+"," + 0 + ")")
             .call(yAxis_left)
         yAxis_L.selectAll(".tick line")
             .attr("transform", "scale(-1,1)");
 
-        let yAxis_R = d3.select('#right_yaxis')
+        let yAxis_R = d3.select('#tsne_right_yaxis')
             .attr('transform', "translate("+(this.svgWidth - this.margin.right )+"," + 0 + ")")
             .call(yAxis_right)
         yAxis_R.selectAll("text")
@@ -151,19 +151,69 @@ class TSNE {
             return this.tooltip_render(tooltip_data)
         });
         
-        let group = d3.select('#act_vs_pred_data')
+        let group = d3.select('#tsne_data')
         let circ = group.selectAll('circle').data(element_data)
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
         circ = circ.merge(new_circ)
-        circ.attr('cx', d => dataScale(parseFloat(d['component1'])))
-            .attr('cy', d => dataScale(parseFloat(d['component2'])))
-            .attr('r', this.svgHeight/75)
+        circ.attr('cx', d => {console.log('does this not work?', d);return dataScale(parseFloat(d['component_1']))})
+            .attr('cy', d => dataScale(parseFloat(d['component_2'])))
+            .attr('r', this.svgHeight/125)
             .attr('fill', d => colorScaleResidual(d['residual']))
             .attr('fill-opacity', d => 1)
-            .attr('class', d => {return 'act_vs_pred ' + d['formula'] + ' ' +  d['elements']})
+            .attr('class', d => {return 'tsne ' + d['formula'] + ' ' +  d['elements']})
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
     };
     
+    onClick(d, that){
+        
+        if (that.selectedElements.length == 0){
+            let circle_data = d3.selectAll('#tsne_data').selectAll('circle')
+            circle_data.style('visibility', 'visible')
+            circle_data.classed('clicked', false)
+        }else{
+            
+            // Need this part of the code to combine the csv's for selected elements and save as dataList
+            // let dataList = combinedCSV
+            // act_vs_pre.update(dataList);
+
+            let circle_data = d3.selectAll('#tsne_data').selectAll('circle')
+            circle_data.classed('clicked', false)
+            that.selectedElements.forEach(d => {
+                let selected_elements = d3.selectAll('#tsne_data')
+                    .selectAll("."+d)
+                    .classed('clicked', true)
+                console.log('selected elements', selected_elements, d)
+            })
+            console.log('am I gere?', d3.selectAll('#tsne_data').selectAll('circles'))
+            circle_data.style('visibility', 'hidden')
+            d3.selectAll('#tsne_data').selectAll('.clicked').style('visibility', 'visible')
+        }
+    };
+    
+    hoverOver(d, that){
+   
+        let selected_data = d3.selectAll('#tsne_data')
+
+        selected_data.selectAll("*:not(."+d.symbol+')')
+            .lower()
+            .classed('not_selected', true)
+        selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
+        
+    };
+    
+    hoverOff(d, that){
+
+        let selected_data = d3.selectAll('#tsne_data')
+        selected_data.selectAll("*:not(."+d.symbol+')')
+            .classed('not_selected', false)
+
+        selected_data.selectAll('.'+d.symbol).lower().classed('selected', false)
+        if (that.selectedElements.length == 0){
+        }else{
+        d3.selectAll('#tsne_data').selectAll("*:not(.clicked)").style('visibility', 'hidden')
+        }
+
+    };
 }
