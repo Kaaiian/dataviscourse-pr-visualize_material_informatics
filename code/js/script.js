@@ -17,7 +17,7 @@ d3.csv("data/ptable.csv").then(ptable => {
     function rangefuc(start, end, len) {
         var step = Math.floor((end - start) / len)
         return Array(len).fill().map((_, idx) => start + (idx * step))
-      }
+    }
       let domain1 = rangefuc(0,1800,13);
       var domain =  [-100, 1, 10, 40, 80, 200, 500, 1000 ,1600];
       console.log(domain);

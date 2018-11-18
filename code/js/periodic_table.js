@@ -6,6 +6,7 @@ class Periodic_table {
      * @param ptable instance of ptable
      * and to populate the legend.
      */
+    
     constructor(ptable, act_vs_pre, line_graph,info,tsne){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
@@ -23,6 +24,9 @@ class Periodic_table {
         this.info = info;
         this.tsne = tsne;
         this.selectedElements = []
+        this.dict = {}
+        this.dict_axis = []
+        this.barHeight_list = []
 
         /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
         d3.csv("data/experimental_predictions.csv").then(element_data => {
@@ -40,26 +44,7 @@ class Periodic_table {
                             .attr("height",legendHeight)
                             .attr("transform", "translate(" + this.margin.left + ",0)");
     };
-
-    /**
-     * Returns the class that needs to be assigned to an element.
-     *
-     * @param party an ID for the party that is being referred to.
-     */
-    chooseClass (party) {
-        if (party == "R"){
-            return "republican";
-        }
-        else if (party== "D"){
-            return "democrat";
-        }
-        else if (party == "I"){
-            return "independent";
-        }
-    }
-
-
-
+    
 
 
     /**
@@ -95,6 +80,10 @@ class Periodic_table {
         let heightCur =parseInt(this.svgHeight/12);
         var domain1 =  [0, 1, 10, 40, 80, 200, 500, 1000 ,1600];
 
+        var resid_bars = this.svg
+            .append("g")
+            .attr("id", "resid_bars");
+
 
         var ptable_bars = this.svg
             .append("g")
@@ -125,14 +114,6 @@ class Periodic_table {
             .style('fill', d=>colorScale(d))
             .style( 'stroke', '#101010')
             .style('stroke-width',1);
-        // c_bars.enter()
-        //     .append('text')
-        //     .attr('x', (d,i)=>widthCur*9+i*widthCur/3+0.5*widthCur/3)
-        //     .attr('y', function(d){if(d>1){return d/30*heightCur/20+heightCur/4+heightCur*0.65}else if(d===0){return heightCur*0.65+heightCur/8} return heightCur*0.65+heightCur/6;})
-        //     .style('font-size', d=>heightCur*0.15+'px')
-        //     .style('fill','red')
-        //     .style('text-anchor', 'middle')
-        //     .text(d=>d);
 
         var x = d3.scaleQuantile().range([0, widthCur*1/3,widthCur*2/3,widthCur*3/3,widthCur*4/3,widthCur*5/3,widthCur*6/3,widthCur*7/3,widthCur*8/3]);
         var xDomain = x.domain(domain1);
@@ -147,10 +128,6 @@ class Periodic_table {
         let lines_bars = color_bars.selectAll('g').selectAll('g').selectAll('line');
         lines_bars.attr('y2', -heightCur*0.06)
 
-
-        var barChart_bars = this.svg
-            .append("g")
-            .attr("id", "barChart_bars");
 
         
         let bars = ptable_bars.selectAll('g').data(this.ptable).enter().append('g');
@@ -255,7 +232,7 @@ class Periodic_table {
                 that.selectedElements.push(d.symbol)
                 selected.classed("highlighted",true);
             }
-            
+            updateBarsCharts(d,that)
             act_vs_pre.onClick(d, that)
         }   
 
@@ -272,13 +249,107 @@ class Periodic_table {
             selectedCircle.classed("highlighted",false);
         }
 
-        function updateBarsCharts(residualTable){
-            console.log("shtting check");
-            console.log(barChart_bars);
-    
-    
-    
+
+        function updateBarsCharts(d, that){
+            that.svg.select("#resid_bars").selectAll("*").remove();
+            if(that.selectedElements.length == 0){
+                that.dict = []
+                d3.csv("data/experimental_predictions.csv").then(temp => {update_dict(temp);});
+            }
+            else{
+                that.dict = []
+                that.selectedElements.forEach(d => {
+                    d3.csv("data/element_data/"+d+".csv").then(data => {
+                        update_dict(data);});
+                })
+            }
+            update_axis(that.dict);
+            update_barsH(that.dict);
+            update_residView(that.dict_axis, that.barHeight_list,that);
         };
+
+        function update_dict(data){
+            data.forEach(function(item){
+                that.dict[item.formula] = item;
+           });
+           console.log(that.dict)
+        };
+
+        function update_axis(dictionary){
+            that.dict_axis = [];
+            let max_d = -12;
+            let min_d = 12;
+
+            Object.keys(dictionary).forEach(function(key) {
+                if(max_d < dictionary[key]['residual']){
+                    max_d = dictionary[key]['residual']
+                }
+                if(min_d > dictionary[key]['residual']){
+                    min_d = dictionary[key]['residual']
+                }
+            });
+            that.dict_axis = [max_d, min_d]
+        };
+
+        function update_barsH(dictionary){
+            let domain1 = rangefuc(that.dict_axis[1],that.dict_axis[0],10)+ that.dict_axis[0];
+            console.log(domain1)
+            let i = 0;
+            barHeight_list = Array(10).fill(0);
+            Object.keys(dictionary).forEach(function(key) {
+                for(i = 0; i < domain1.length-1;i++){
+                    if(dictionary[key]['residual']>= domain1[i] && dictionary[key]['residual']< domain1[i+1]){
+                        barHeight_list[i]++;
+                        break;
+                    }
+                }
+            });
+            
+        };
+
+        function update_residView(dict_axis,barHeight_list, that){
+            var resibar = that.svg.select("#resid_bars")
+            resibar.append('g').attr('id', 'title_of_resid_bar');
+            let title_group = color_bars.select('#title_of_resid_bar');
+            title_group.append('text')
+                .attr('x', widthCur*5.5)
+                .attr('y', heightCur*0.3)
+                .style('font-size', d=>heightCur*0.2+'px')
+                .style('fill','black')
+                .style('text-anchor', 'middle')
+                .text(d=>"Plot for Residual");
+    
+    
+            let c_bars =  color_bars.selectAll('rect').data(barHeight_list);
+            c_bars.enter()
+                .append('rect')
+                .attr('x', (d,i)=>widthCur*5+i*widthCur/3)
+                .attr('y', heightCur*0.6)
+                .attr('width',widthCur/3)
+                .attr('height', d=>d*heightCur*0.1)
+                .style('fill', d=>colorScale(d))
+                .style( 'stroke', '#101010')
+                .style('stroke-width',1);
+    
+            var x = d3.scaleQuantile().range([0, widthCur*1/3,widthCur*2/3,widthCur*3/3,widthCur*4/3,widthCur*5/3,widthCur*6/3,widthCur*7/3,widthCur*8/3]);
+            var xDomain = x.domain(domain1);
+            let xAxis = d3.axisTop(x).tickSizeOuter(0);
+                
+            color_bars.append('g').classed('axis', true)
+                  .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.6 + ")").call(xAxis)
+                  .style('font-size', d=>heightCur*0.16+'px')
+                  .style('text-anchor', 'middle');
+            let text_bars = color_bars.selectAll('g').selectAll('g').selectAll('text');
+            text_bars.attr('y', -heightCur*0.1)
+            let lines_bars = color_bars.selectAll('g').selectAll('g').selectAll('line');
+            lines_bars.attr('y2', -heightCur*0.06)
+        };
+
+        function rangefuc(start, end, len) {
+            var step = Math.floor((end - start) / len)
+            return Array(len).fill().map((_, idx) => start + (idx * step))
+        }
+
 
 
             
