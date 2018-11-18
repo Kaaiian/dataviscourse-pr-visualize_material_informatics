@@ -32,7 +32,7 @@ class Periodic_table {
         d3.csv("data/experimental_predictions.csv").then(element_data => {
             //console.log('update act_vs_pred', element_data)
             this.act_vs_pre.update(element_data);
-            //this.tsne.update(element_data);
+            this.tsne.update(element_data);
         });
 
         let legendHeight = 20;
@@ -234,15 +234,18 @@ class Periodic_table {
                 selected.classed("highlighted",true);
             }
             updateBarsCharts()
-            act_vs_pre.onClick(d, that)
+            that.act_vs_pre.onClick(d, that)
+            that.tsne.onClick(d, that)
         }   
 
         function hoverOver(d) {
-            act_vs_pre.hoverOver(d, that)
+            that.act_vs_pre.hoverOver(d, that)
+            that.tsne.hoverOver(d, that)
         }
             
         function hoverOff(d) {
-            act_vs_pre.hoverOff(d, that)
+            that.act_vs_pre.hoverOff(d, that)
+            that.tsne.hoverOff(d, that)
         }
 
         function notclick() {
@@ -280,7 +283,7 @@ class Periodic_table {
             that.dict_axis = [];
             let max_d = -12;
             let min_d = 12;
-            console.log(that.dict)
+            console.log(that.dict["VO"])
             Object.keys(that.dict).forEach(function(key) {
                 if(max_d < that.dict[key]['residual']){
                     max_d = that.dict[key]['residual']
