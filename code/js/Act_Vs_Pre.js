@@ -182,27 +182,40 @@ class Act_Vs_Pre {
 
             let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
             circle_data.classed('clicked', false)
+            
+            let selected_elements = d3.selectAll('#act_vs_pred_data')
+            
+            let selection = ''
+            
             that.selectedElements.forEach(d => {
-                let selected_elements = d3.selectAll('#act_vs_pred_data')
-                    .selectAll("."+d)
-                    .classed('clicked', true)
-                console.log('selected elements', selected_elements, d)
+                selection += '.'+d
             })
-            console.log('am I gere?', d3.selectAll('#act_vs_pred_data').selectAll('circles'))
+            
+            
+            console.log('selected elements', selection)
+            selected_elements.selectAll(selection).classed('clicked', true)
+            console.log('Current selection?', selected_elements.selectAll(selection))
             circle_data.style('visibility', 'hidden')
             d3.selectAll('#act_vs_pred_data').selectAll('.clicked').style('visibility', 'visible')
         }
     };
     
     hoverOver(d, that){
-   
-        let selected_data = d3.selectAll('#act_vs_pred_data')
-
+        console.log(d.symbol)
+        console.log(that.selectedElements.length)
+        let selected_data;
+        if (that.selectedElements.length == 0){
+            selected_data = d3.selectAll('#act_vs_pred_data')
+        }else{
+            selected_data = d3.selectAll('#act_vs_pred_data').selectAll('.clicked')
+            }
+            
+        console.log('THIS IS HERE', selected_data.selectAll(':not(.'+d.symbol+')'))
+        
         selected_data.selectAll("*:not(."+d.symbol+')')
             .lower()
             .classed('not_selected', true)
         selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
-        
     };
     
     hoverOff(d, that){

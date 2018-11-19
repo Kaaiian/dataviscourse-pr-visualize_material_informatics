@@ -156,7 +156,7 @@ class TSNE {
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
         circ = circ.merge(new_circ)
-        circ.attr('cx', d => {console.log('does this not work?', d);return dataScale(parseFloat(d['component_1']))})
+        circ.attr('cx', d => {return dataScale(parseFloat(d['component_1']))})
             .attr('cy', d => dataScale(parseFloat(d['component_2'])))
             .attr('r', this.svgHeight/125)
             .attr('fill', d => colorScaleResidual(d['residual']))
