@@ -24,9 +24,10 @@ class Periodic_table {
         this.info = info;
         this.tsne = tsne;
         this.selectedElements = []
-        this.dict = {}
-        this.dict_axis = []
-        this.barHeight_list = []
+        this.dict = new Set();
+        this.arrayV = [];
+        this.dict_axis = [];
+        this.barHeight_list = [];
 
         /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
         d3.csv("data/experimental_predictions.csv").then(element_data => {
@@ -252,51 +253,59 @@ class Periodic_table {
             var selectedCircle = d3.select(this).select('rect')
             selectedCircle.classed("highlighted",false);
         }
+        var data_info = {}
 
 
         function updateBarsCharts(){
             that.svg.select("#resid_bars").selectAll("*").remove();
             if(that.selectedElements.length == 0){
-                that.dict = []
-                d3.csv("data/experimental_predictions.csv").then(temp => {update_dict(temp);});
+                data_info = {};
+                d3.csv("data/experimental_predictions.csv").then(temp => {data_info = update_dict(temp,data_info);});
             }
             else{
-                that.dict = []
+                data_info = {};
                 that.selectedElements.forEach(d => {
                     d3.csv("data/element_data/"+d+".csv").then(data => {
-                        update_dict(data);});
+                        data_info = update_dict(data, data_info);});
                 })
             }
-            update_axis();
-            update_barsH();
-            update_residView();
+            console.log('dict1 ',data_info)
+            update_axis(data_info);
+            update_barsH(data_info);
+            update_residView(data_info);
         };
 
-        function update_dict(data){
+        function update_dict(data, return_data){
             data.forEach(function(item){
-                that.dict[item.formula] = item;
-           });
-           //console.log(that.dict)
+                return_data[item.formula]= item.residual;
+            });
+            return return_data
         };
 
-        function update_axis(){
+
+        function update_axis(data){
             that.dict_axis = [];
             let max_d = -12;
             let min_d = 12;
-            console.log(that.dict["VO"])
-            Object.keys(that.dict).forEach(function(key) {
-                if(max_d < that.dict[key]['residual']){
-                    max_d = that.dict[key]['residual']
-                }
-                if(min_d > that.dict[key]['residual']){
-                    min_d = that.dict[key]['residual']
-                }
-            });
+            console.log('dict',data["AgF"])
+            for (var key in data) console.log(key);
+
+
+
+            // for(){
+            //     console.log('haha2 '+value)
+            //     if(max_d < value['residual']){
+            //         max_d = value['residual']
+            //     }
+            //     if(min_d >value['residual']){
+            //         min_d = value['residual']
+            //     }
+            // }
             that.dict_axis = [max_d, min_d]
             console.log('haha'+that.dict_axis)
         };
 
-        function update_barsH(){
+        function update_barsH(data){
             let domain1 = rangefuc(that.dict_axis[0],that.dict_axis[1],10);
             domain1.push(that.dict_axis[0]);
             console.log(domain1.toString())
@@ -314,7 +323,7 @@ class Periodic_table {
             
         };
 
-        function update_residView(){
+        function update_residView(data){
             let widthCur = parseInt(that.svgWidth/20);
             let heightCur =parseInt(that.svgHeight/12);
             console.log(that.barHeight_list)
