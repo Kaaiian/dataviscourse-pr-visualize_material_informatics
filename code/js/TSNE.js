@@ -18,7 +18,8 @@ class TSNE {
         // plot_data.attr('transform', 'translate(0,' + this.svgHeight*1 - this.margin.top + ') scale(1, 1) ')
         plot_data.attr('transform', 'translate(0,' + this.svgHeight + ') scale(1, -1) ')
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_xaxis')
-        
+        plot_data.append('g').attr('id', 'tsne_compounds')
+
         // this.svg.select('#tsne_plot').append('g').attr('id', 'ideal prediction').append('line').attr('x1', this.margin.left).attr('y1', this.svgHeight-this.margin.bottom).attr('x2', this.svgWidth - this.margin.right).attr('y2', this.margin.top).attr('stroke', 'black').style("stroke-dasharray", ("3, 3"))
         
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_top_xaxis')
@@ -221,7 +222,7 @@ class TSNE {
             return this.tooltip_render(tooltip_data)
         });
         
-        let group = d3.select('#tsne_data')
+        let group = d3.select('#tsne_data').select('#tsne_compounds')
         let circ = group.selectAll('circle').data(element_data)
         let new_circ = circ.enter().append('circle')
         circ.exit().remove()
@@ -240,28 +241,28 @@ class TSNE {
     onClick(d, that){
         
         if (that.selectedElements.length == 0){
-            let circle_data = d3.selectAll('#tsne_data').selectAll('circle')
+            let circle_data = d3.selectAll('#tsne_compounds').selectAll('circle')
             circle_data.style('visibility', 'visible')
             circle_data.classed('clicked', false)
         }else{
 
-            let circle_data = d3.selectAll('#tsne_data').selectAll('circle')
+            let circle_data = d3.selectAll('#tsne_compounds').selectAll('circle')
             circle_data.classed('clicked', false)
             that.selectedElements.forEach(d => {
-                let selected_elements = d3.selectAll('#tsne_data')
+                let selected_elements = d3.selectAll('#tsne_compounds')
                     .selectAll("."+d)
                     .classed('clicked', true)
                 console.log('selected elements', selected_elements, d)
             })
-            console.log('am I gere?', d3.selectAll('#tsne_data').selectAll('circles'))
+            console.log('am I gere?', d3.selectAll('#tsne_compounds').selectAll('circles'))
             circle_data.style('visibility', 'hidden')
-            d3.selectAll('#tsne_data').selectAll('.clicked').style('visibility', 'visible')
+            d3.selectAll('#tsne_compounds').selectAll('.clicked').style('visibility', 'visible')
         }
     };
     
     hoverOver(d, that){
    
-        let selected_data = d3.selectAll('#tsne_data')
+        let selected_data = d3.selectAll('#tsne_compounds')
 
         selected_data.selectAll("*:not(."+d.symbol+')')
             .lower()
@@ -271,14 +272,14 @@ class TSNE {
     
     hoverOff(d, that){
 
-        let selected_data = d3.selectAll('#tsne_data')
+        let selected_data = d3.selectAll('#tsne_compounds')
         selected_data.selectAll("*:not(."+d.symbol+')')
             .classed('not_selected', false)
 
         selected_data.selectAll('.'+d.symbol).lower().classed('selected', false)
         if (that.selectedElements.length == 0){
         }else{
-        d3.selectAll('#tsne_data').selectAll("*:not(.clicked)").style('visibility', 'hidden')
+        d3.selectAll('#tsne_compounds').selectAll("*:not(.clicked)").style('visibility', 'hidden')
         }
 
     };
