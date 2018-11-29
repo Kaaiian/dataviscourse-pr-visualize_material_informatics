@@ -201,21 +201,14 @@ class Act_Vs_Pre {
     };
     
     hoverOver(d, that){
-        console.log(d.symbol)
-        console.log(that.selectedElements.length)
-        let selected_data;
-        if (that.selectedElements.length == 0){
-            selected_data = d3.selectAll('#act_vs_pred_data')
-        }else{
-            selected_data = d3.selectAll('#act_vs_pred_data').selectAll('.clicked')
-            }
-            
-        console.log('THIS IS HERE', selected_data.selectAll(':not(.'+d.symbol+')'))
-        
+   
+        let selected_data = d3.selectAll('#act_vs_pred_data')
+
         selected_data.selectAll("*:not(."+d.symbol+')')
             .lower()
             .classed('not_selected', true)
         selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
+        
     };
     
     hoverOff(d, that){
@@ -231,4 +224,5 @@ class Act_Vs_Pre {
         }
 
     };
+
 }

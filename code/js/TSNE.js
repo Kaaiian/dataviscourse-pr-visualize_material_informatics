@@ -57,6 +57,7 @@ class TSNE {
     }
     
     update (element_data){
+        console.log('element data', element_data)
         this.plot_data(element_data)
     }
     
@@ -82,27 +83,37 @@ class TSNE {
         let maxarray1 = d3.max(component_1)
         let maxarray2 = d3.max(component_2)
 
+        let minarray1 = d3.min(component_1)
+        let minarray2 = d3.min(component_2)
+
+
         let max_residual = d3.max(residual)
         let min_residual = d3.min(residual)
-        let max_band_gap = d3.max([maxarray1, maxarray2])
+        let min_component = d3.min([minarray1, minarray2])
+        let max_component = d3.max([maxarray1, maxarray2])
 
         console.log('residual_scale', max_residual, min_residual)
+        console.log('min/max', min_component, max_component)
         
         let colorScaleResidual = d3.scaleLinear()
             .domain([2, 0, -2])
             .range(['#fc8d59', 'gray', '#91bfdb'])
 
+        let colorScaleBandGap = d3.scaleLinear()
+            .domain([0, 12])
+            .range(['#7ec0ee', 'purple'])
+
         let dataScale = d3.scaleLinear()
-            .domain([0, max_band_gap])
+            .domain([min_component, max_component])
             .range([this.margin.left, this.svgWidth - this.margin.right])
 
         let xScale = d3.scaleLinear()
-            .domain([0, max_band_gap])
+            .domain([min_component, max_component])
             .range([this.margin.left, this.svgWidth - this.margin.right])
             .nice()
             
         let yScale = d3.scaleLinear()
-            .domain([max_band_gap, 0])     
+            .domain([max_component, min_component])     
             .range([this.margin.top, this.svgHeight - this.margin.bottom])
             .nice()
 
@@ -160,6 +171,7 @@ class TSNE {
             .attr('cy', d => dataScale(parseFloat(d['component_2'])))
             .attr('r', this.svgHeight/125)
             .attr('fill', d => colorScaleResidual(d['residual']))
+            // .attr('fill', d => colorScaleBandGap(d['actual']))
             .attr('fill-opacity', d => 1)
             .attr('class', d => {return 'tsne ' + d['formula'] + ' ' +  d['elements']})
             .on('mouseover', this.tip.show)

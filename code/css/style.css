@@ -150,11 +150,11 @@ circle.act_vs_pred{
 
 .selected{
     stroke: #404040;
-    stroke-width:4;
+    stroke-width:1;
 }
 
 circle.selected{
-    fill-opacity: 0.9;
+    fill-opacity: 1;
 }
 
 .not_selected {
