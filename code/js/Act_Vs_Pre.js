@@ -94,16 +94,16 @@ class Act_Vs_Pre {
             .range(['#fc8d59', 'gray', '#91bfdb'])
 
         let dataScale = d3.scaleLinear()
-            .domain([0, max_band_gap])
+            .domain([-0.5, max_band_gap+0.5])
             .range([this.margin.left, this.svgWidth - this.margin.right])
 
         let xScale = d3.scaleLinear()
-            .domain([0, max_band_gap])
+            .domain([-0.5, max_band_gap+0.5])
             .range([this.margin.left, this.svgWidth - this.margin.right])
             .nice()
             
         let yScale = d3.scaleLinear()
-            .domain([max_band_gap, 0])     
+            .domain([max_band_gap+0.5, -0.5])     
             .range([this.margin.top, this.svgHeight - this.margin.bottom])
             .nice()
 
@@ -182,19 +182,13 @@ class Act_Vs_Pre {
 
             let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
             circle_data.classed('clicked', false)
-            
-            let selected_elements = d3.selectAll('#act_vs_pred_data')
-            
-            let selection = ''
-            
             that.selectedElements.forEach(d => {
-                selection += '.'+d
+                let selected_elements = d3.selectAll('#act_vs_pred_data')
+                    .selectAll("."+d)
+                    .classed('clicked', true)
+                console.log('selected elements', selected_elements, d)
             })
-            
-            
-            console.log('selected elements', selection)
-            selected_elements.selectAll(selection).classed('clicked', true)
-            console.log('Current selection?', selected_elements.selectAll(selection))
+            console.log('am I gere?', d3.selectAll('#act_vs_pred_data').selectAll('circles'))
             circle_data.style('visibility', 'hidden')
             d3.selectAll('#act_vs_pred_data').selectAll('.clicked').style('visibility', 'visible')
         }
