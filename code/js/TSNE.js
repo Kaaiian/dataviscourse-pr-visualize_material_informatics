@@ -11,10 +11,11 @@ class TSNE {
         this.svg = actPred.append("svg")
             .attr("width", this.svgWidth)
             .attr("height", this.svgHeight)
-            .attr('id', 'Act_Vs_Pre_Chart_svg') 
+            .attr('id', 'TSNE_Chart_svg') 
             
         let plot_area = this.svg.append('g').attr('id', 'tsne_plot')
         let plot_data = this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_data')
+        // plot_data.attr('transform', 'translate(0,' + this.svgHeight*1 - this.margin.top + ') scale(1, 1) ')
         plot_data.attr('transform', 'translate(0,' + this.svgHeight + ') scale(1, -1) ')
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_xaxis')
         
@@ -59,6 +60,64 @@ class TSNE {
     update (element_data){
         console.log('element data', element_data)
         this.plot_data(element_data)
+
+        let svg = d3.select('#tsne_data')
+
+        // svg = d3.select('#electoral-vote').selectAll('svg').selectAll('#barChartRepublican')
+
+        let that = this
+        let brushFunction = function(){
+            if (!d3.event.sourceEvent) return; // Only transition after input.
+            if (!d3.event.selection) return; // Ignore empty selections.
+            let coords = d3.event.selection;
+
+            let data = d3.select('#TSNE_Chart').selectAll('svg').selectAll('#tsne_data').selectAll('circle')
+            let selected = []
+
+            console.log("data: ", data);
+
+            data.attr('opacity', function(d) {
+
+                let x = parseFloat(d3.select(this).attr('cx'))
+                let y = parseFloat(d3.select(this).attr('cy'))
+
+                // console.log('x, y', x, y)
+                if (isSelected(coords, x, y) == true){
+                    // console.log('selected?', isSelected(coords, x, y))
+                    selected.push(d)
+                }else{
+                    // console.log('false selected', isSelected(coords, x, y), coords, d3.select(this).attr('x'))
+                }
+                return 1
+            })
+
+            console.log('selected elements', selected)
+
+            function isSelected(coords, x, y){
+                let x0 = coords[0][0],
+                    x1 = coords[1][0],
+                    y0 = coords[0][1],
+                    y1 = coords[1][1];
+                
+                return x0 <= x && x <= x1 && y0 <= y && y <= y1
+            }
+
+
+            console.log(selected)
+
+            console.log('brush selection scaled to domain: ', coords)
+            
+        // We have the x axis data from brushing now
+        // .....
+        }
+        //create a brush 
+        //extend defines the brush functional area
+        let brushGroup = svg.append('g').classed('brush', true)
+                            .call(d3.brush()
+                            .extent([[0, 0], [this.svgWidth, this.svgHeight]])
+                            .on("brush", brushFunction));
+
+
     }
     
     plot_data (element_data){
@@ -185,10 +244,6 @@ class TSNE {
             circle_data.style('visibility', 'visible')
             circle_data.classed('clicked', false)
         }else{
-            
-            // Need this part of the code to combine the csv's for selected elements and save as dataList
-            // let dataList = combinedCSV
-            // act_vs_pre.update(dataList);
 
             let circle_data = d3.selectAll('#tsne_data').selectAll('circle')
             circle_data.classed('clicked', false)
@@ -212,7 +267,6 @@ class TSNE {
             .lower()
             .classed('not_selected', true)
         selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
-        
     };
     
     hoverOff(d, that){
@@ -228,4 +282,8 @@ class TSNE {
         }
 
     };
+
+
+
+    
 }

@@ -175,10 +175,6 @@ class Act_Vs_Pre {
             circle_data.style('visibility', 'visible')
             circle_data.classed('clicked', false)
         }else{
-            
-            // Need this part of the code to combine the csv's for selected elements and save as dataList
-            // let dataList = combinedCSV
-            // act_vs_pre.update(dataList);
 
             let circle_data = d3.selectAll('#act_vs_pred_data').selectAll('circle')
             circle_data.classed('clicked', false)
@@ -202,7 +198,6 @@ class Act_Vs_Pre {
             .lower()
             .classed('not_selected', true)
         selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
-        
     };
     
     hoverOff(d, that){
