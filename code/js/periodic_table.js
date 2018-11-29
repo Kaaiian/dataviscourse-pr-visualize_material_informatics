@@ -253,57 +253,71 @@ class Periodic_table {
             var selectedCircle = d3.select(this).select('rect')
             selectedCircle.classed("highlighted",false);
         }
-        var data_info = {}
+        
 
 
         function updateBarsCharts(){
+            var data_info = new Map();
             that.svg.select("#resid_bars").selectAll("*").remove();
-            if(that.selectedElements.length == 0){
-                data_info = {};
-                d3.csv("data/experimental_predictions.csv").then(temp => {data_info = update_dict(temp,data_info);});
+            if(that.selectedElements.length == 0){              
+                d3.csv("data/experimental_predictions.csv").then(temp => {
+                    temp.forEach(function(item){
+                        data_info.set(item.formula.toString(), parseFloat(item.residual));
+                    });
+                });
             }
             else{
-                data_info = {};
                 that.selectedElements.forEach(d => {
                     d3.csv("data/element_data/"+d+".csv").then(data => {
-                        data_info = update_dict(data, data_info);});
+                        data.forEach(function(item){
+                            data_info.set(item.formula.toString(), parseFloat(item.residual));
+                        });
+                    });
                 })
             }
+            var new_map = new Map(data_info)
             console.log('dict1 ',data_info)
-            update_axis(data_info);
-            update_barsH(data_info);
-            update_residView(data_info);
-        };
-
-        function update_dict(data, return_data){
-            data.forEach(function(item){
-                return_data[item.formula]= item.residual;
+            data_info.forEach(function(value, key) {
+                console.log(key + ' = ' + value);
             });
-            return return_data
+            //update_axis(data_info);
+            //update_barsH(data_info);
+            // update_residView(data_info);
         };
 
-
-        function update_axis(data){
-            that.dict_axis = [];
-            let max_d = -12;
-            let min_d = 12;
-            console.log('dict',data["AgF"])
-            for (var key in data) console.log(key);
-
+        // function update_dict(data, return_data){
+        //     data.forEach(function(item){
+        //         return_data[item.formula.toString()]= parseFloat(item.residual);
+        //     });
+        //     return return_data
+        // };
 
 
-            // for(){
-            //     console.log('haha2 '+value)
-            //     if(max_d < value['residual']){
-            //         max_d = value['residual']
-            //     }
-            //     if(min_d >value['residual']){
-            //         min_d = value['residual']
-            //     }
-            // }
-            that.dict_axis = [max_d, min_d]
-            console.log('haha'+that.dict_axis)
-        };
+        // function update_axis(data_info){
+        //     that.dict_axis = [];
+        //     let max_d = -12;
+        //     let min_d = 12;
+        //     data_info["key"] = 1
+        //     console.log('dict0',data_info)
+        //     console.log('dict',data_info["key"])
+        //     Object.entries(data_info).forEach(
+        //         ([key, value]) => console.log(key, value)
+        //     );
+
+
+
+        //     // for(){
+        //     //     console.log('haha2 '+value)
+        //     //     if(max_d < value['residual']){
+        //     //         max_d = value['residual']
+        //     //     }
+        //     //     if(min_d >value['residual']){
+        //     //         min_d = value['residual']
+        //     //     }
+        //     // }
+        //     that.dict_axis = [max_d, min_d]
+        //     console.log('haha'+that.dict_axis)
+        // };
 
         function update_barsH(data){
             let domain1 = rangefuc(that.dict_axis[0],that.dict_axis[1],10);
