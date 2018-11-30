@@ -60,17 +60,19 @@ class TSNE {
             .attr('x', this.svgWidth/4)
             .attr('y', '0')
             .attr('width', this.svgWidth/2)
-            .attr('height', '30')
+            .attr('height', this.svgWidth*0.04)
             .attr('fill', 'silver')
             .attr('stroke', 'black')
             .on('click', d => this.buttonClick(d, that))
 
         buttons.append('text')
-            .attr('x', this.svgWidth/4)
-            .attr('y', '15')
+            .attr('x', this.svgWidth/3.5)
+            .attr('y', this.svgWidth*0.02)
             .style('alignment-baseline', "middle")
+            .style('font-size', d=>this.svgWidth* 0.02+'px')
             // .style('')
             .text('"toggle displayed values" bandgap/residual (eV)')
+            .on('click', d => this.buttonClick(d, that))
 
 
 
