@@ -74,8 +74,6 @@ class TSNE {
             .text('"toggle displayed values" bandgap/residual (eV)')
             .on('click', d => this.buttonClick(d, that))
 
-
-
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_colorbar')
             .attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
         

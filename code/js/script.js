@@ -9,7 +9,7 @@ let electoralVoteChart = new ElectoralVoteChart(shiftChart);*/
 
 let act_vs_pre = new Act_Vs_Pre();
 let linegraph = '';
-let info = '';
+let info = new Info();
 let tsne = new TSNE();
 // let tsne = new TSNE();
 
