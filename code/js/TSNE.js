@@ -174,8 +174,8 @@ class TSNE {
         let component_1 = []
         let component_2 = []
         let actual = []
-        let predicted = [.attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
-        let residual = [].attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
+        let predicted = []
+        let residual = []
         
         let elementData = element_data.map(formula => {
             component_1.push(parseFloat(formula['component_1']))
