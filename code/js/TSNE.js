@@ -4,14 +4,16 @@ class TSNE {
         // Follow the constructor method in tsne.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 10, bottom: 45, left: 45};
-        let actPred = d3.select("#TSNE_Chart").classed("tsne_view", true);
-        this.svgBounds = actPred.node().getBoundingClientRect();
+        let tsne = d3.select("#TSNE_Chart").classed("tsne_view", true);
+        this.svgBounds = tsne.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
         this.svgHeight = parseInt(this.svgWidth);
-        this.svg = actPred.append("svg")
+        this.svg = tsne.append("svg")
             .attr("width", this.svgWidth)
             .attr("height", this.svgHeight)
             .attr('id', 'TSNE_Chart_svg') 
+            
+        
             
         let plot_area = this.svg.append('g').attr('id', 'tsne_plot')
         let plot_data = this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_data')
@@ -21,6 +23,7 @@ class TSNE {
         plot_data.append('g').attr('id', 'tsne_compounds')
 
         // this.svg.select('#tsne_plot').append('g').attr('id', 'ideal prediction').append('line').attr('x1', this.margin.left).attr('y1', this.svgHeight-this.margin.bottom).attr('x2', this.svgWidth - this.margin.right).attr('y2', this.margin.top).attr('stroke', 'black').style("stroke-dasharray", ("3, 3"))
+        
         
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_top_xaxis')
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_bottom_xaxis')
@@ -38,6 +41,7 @@ class TSNE {
         
         this.svg.call(this.tip)
     };
+    
     
 
     tooltip_render (tooltip_data) {
