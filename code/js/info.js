@@ -29,7 +29,7 @@ class Info {
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
             .attr("width", this.svgWidth/5)
-            .style("fill", "lightgreen")
+            .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
 
@@ -51,7 +51,7 @@ class Info {
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
             .attr("width", this.svgWidth/5)
-            .style("fill", "lightgreen")
+            .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
 

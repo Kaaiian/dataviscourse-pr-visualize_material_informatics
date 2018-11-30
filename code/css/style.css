@@ -1,5 +1,6 @@
 
 
+
 .wrapper {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -10,8 +11,8 @@
       "a a a a a b b"
       "a a a a a b b"
       "a a a a a b b"
-      "a a a a a b b"
-      "a a a a a b b"
+      "a a a a a c c"
+      "a a a a a c c"
       "a a a a a c c";
 }
 
@@ -57,11 +58,12 @@
 body {
     font-family: Lato;
     padding:40px;
+    background-color: rgb(210, 242, 247);
 }
 
-h1 {
+h2 {
     font-family: "Arvo";
-    font-size:35px;
+    font-size:30px;
     color: #464646;
     margin: 0px;
     padding: 0px;
@@ -78,11 +80,11 @@ h1 {
 }
 
 .hidden{
-    visibility: 'hidden'
+    visibility: hidden
 }
 
 .nothidden{
-    visibility: 'visible'
+    visibility: visible
 }
 
 .yeartext, .tilestext, .brushtext{
@@ -266,7 +268,7 @@ h2{
 
 h3{
     text-anchor:middle;
-    font-size: 32px;
+    font-size: 20px;
 }
 
 .axis { 
