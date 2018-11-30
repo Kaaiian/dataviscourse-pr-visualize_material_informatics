@@ -24,9 +24,10 @@ class Periodic_table {
         this.info = info;
         this.tsne = tsne;
         this.selectedElements = []
-        this.dict = {}
+        this.dict = []
         this.dict_axis = []
         this.barHeight_list = []
+        this.text = "All Elements"
 
         /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
         d3.csv("data/experimental_predictions.csv").then(element_data => {
@@ -259,17 +260,20 @@ class Periodic_table {
             if(that.selectedElements.length == 0){
                 that.dict = []
                 d3.csv("data/experimental_predictions.csv").then(temp => {update_dict(temp);});
+                that.text = "All Elements. "
             }
             else{
                 that.dict = []
+                that.text = "";
                 that.selectedElements.forEach(d => {
+                    that.text =that.text +d+", "
                     d3.csv("data/element_data/"+d+".csv").then(data => {
                         update_dict(data);});
+                        
                 })
             }
-            update_axis();
-            update_barsH();
-            update_residView();
+            that.text = that.text.slice(0, -2) + '.';
+            window.setTimeout(update_axis,1000);
         };
 
         function update_dict(data){
@@ -283,7 +287,8 @@ class Periodic_table {
             that.dict_axis = [];
             let max_d = -12;
             let min_d = 12;
-            console.log(that.dict["VO"])
+            let count = 0;
+            console.log('diction waiting check:',that.dict)
             Object.keys(that.dict).forEach(function(key) {
                 if(max_d < that.dict[key]['residual']){
                     max_d = that.dict[key]['residual']
@@ -291,68 +296,111 @@ class Periodic_table {
                 if(min_d > that.dict[key]['residual']){
                     min_d = that.dict[key]['residual']
                 }
+                count++;
             });
-            that.dict_axis = [max_d, min_d]
-            console.log('haha'+that.dict_axis)
+            that.dict_axis = [Math.floor(min_d),Math.floor(max_d) +1]
+            console.log('haha '+that.dict_axis);
+            update_barsH(count);
+            update_residView();
         };
 
-        function update_barsH(){
-            let domain1 = rangefuc(that.dict_axis[0],that.dict_axis[1],10);
-            domain1.push(that.dict_axis[0]);
+        function update_barsH(count){
+            let how_many = 5;
+            if(count >20){
+                how_many = 10;
+            }
+            if(count >100){
+                how_many = 20;
+            }
+            if(count >200){
+                how_many = 30;
+            }
+
+            let domain1 = rangefuc(that.dict_axis[0],that.dict_axis[1],how_many);
+            domain1.push(that.dict_axis[1]);
             console.log(domain1.toString())
             let i = 0;
-            that.barHeight_list = Array(10).fill(0);
+            that.barHeight_list = Array(how_many).fill(0);
             Object.keys(that.dict).forEach(function(key) {
                 for(i = 0; i < domain1.length-1;i++){
                     if(that.dict[key]['residual']>= domain1[i] && that.dict[key]['residual']< domain1[i+1]){
                         that.barHeight_list[i]++;
-                        break;
+                        i = domain1.length-1;
                     }
                 }
             });
-            console.log('haha1'+that.barHeight_list)
+            console.log('haha1 '+that.barHeight_list)
             
         };
 
         function update_residView(){
             let widthCur = parseInt(that.svgWidth/20);
             let heightCur =parseInt(that.svgHeight/12);
-            console.log(that.barHeight_list)
+            let how_many = that.barHeight_list.length;
+            let x_rate = widthCur*5/how_many;
+            let range1 = ['#fcfbfd','#efedf5','#dadaeb','#bcbddc','#9e9ac8','#807dba','#6a51a3','#4a1486'];
+            let domain1 = [0,2,5,20,60,100,180,300]
+            let colorScale1 = d3.scaleLinear()
+                .domain(domain1)
+                .range(range1);
             var resibar = that.svg.select("#resid_bars")
             resibar.append('g').attr('id', 'title_of_resid_bar');
             let rtitle_group = resibar.select('#title_of_resid_bar');
             rtitle_group.append('text')
-                .attr('x', widthCur*5.5)
+                .attr('x', widthCur*5)
                 .attr('y', heightCur*0.3)
-                .style('font-size', d=>heightCur*0.2+'px')
+                .style('font-size', d=>heightCur*0.3+'px')
                 .style('fill','black')
                 .style('text-anchor', 'middle')
-                .text(d=>"Plot for Residual");
+                .text(d=>"Plot for Residual: "+that.text);
+            
+            console.log(Math.max.apply(null, that.barHeight_list))   
+            let rate = (heightCur*3.2)/(Math.max.apply(null, that.barHeight_list));
     
     
             let r_bars =  resibar.selectAll('rect').data(that.barHeight_list);
             r_bars.enter()
                 .append('rect')
-                .attr('x', (d,i)=>widthCur*5+i*widthCur/3)
-                .attr('y', heightCur*0.6)
-                .attr('width',widthCur/3)
-                .attr('height', d=>11)
-                .style('fill', 'blue')
+                .attr('x', (d,i)=>widthCur*3.5+i*x_rate)
+                .attr('y', d=>heightCur*3.6-d*rate)
+                .attr('width',x_rate)
+                .attr('height', d=>d*rate)
+                .style('fill', d=> colorScale1(d))
                 .style( 'stroke', '#101010')
                 .style('stroke-width',1);
+            r_bars.attr("transform", 
+            "translate(" + widthCur + "," +heightCur + ")");
     
-            var x = d3.scaleQuantile().range([0, widthCur*1/3,widthCur*2/3,widthCur*3/3,widthCur*4/3,widthCur*5/3,widthCur*6/3,widthCur*7/3,widthCur*8/3]);
-            var xDomain = x.domain(domain1);
-            let xAxis = d3.axisTop(x).tickSizeOuter(0);
+            let xScale = d3.scaleLinear()
+                .domain([that.dict_axis[0], that.dict_axis[1]])
+                .range([widthCur*3.5,widthCur*9])
+                .nice()
+            let yScale = d3.scaleLinear()
+                .domain([Math.max.apply(null, that.barHeight_list), 0])     
+                .range([heightCur*0.4, heightCur*3.6])
+                .nice()
+            let xAxis = d3.axisTop(xScale).tickSizeOuter(0);
+            let yAxis_left = d3.axisLeft(yScale).tickSizeOuter(0);
                 
             resibar.append('g').classed('axis', true)
-                  .attr('transform', "translate("+(widthCur*9-1)+"," + heightCur*0.6 + ")").call(xAxis)
-                  .style('font-size', d=>heightCur*0.16+'px')
-                  .style('text-anchor', 'middle');
-            let rtext_bars = resibar.selectAll('g').selectAll('g').selectAll('text');
-            rtext_bars.attr('y', -heightCur*0.1)
-            let rlines_bars = resibar.selectAll('g').selectAll('g').selectAll('line');
-            rlines_bars.attr('y2', -heightCur*0.06)
+                    .attr('id', 'x_axis')
+                    .attr('transform', "translate("+0+"," + heightCur*3.6 + ")").call(xAxis)
+                    .style('font-size', d=>heightCur*0.16+'px')
+                    .style('text-anchor', 'middle');
+            let rtext_bars = resibar.select('#x_axis').selectAll('g').selectAll('text');
+            rtext_bars.attr('y', heightCur*0.16)
+            let rlines_bars = resibar.select('#x_axis').selectAll('g').selectAll('line');
+            rlines_bars.attr('y2', heightCur*0.06)
+
+            resibar.append('g').classed('axis', true)
+                    .attr('id', 'y_axis')
+                    .attr('transform', "translate("+widthCur*3.5+"," +0 + ")").call(yAxis_left)
+                    .style('font-size', d=>heightCur*0.16+'px')
+                    .style('text-anchor', 'middle');
+            let rtext_barsy = resibar.select('#y_axis').selectAll('g').selectAll('text');
+            rtext_barsy.attr('x', -heightCur*0.16)
+            let rlines_barsy = resibar.select('#y_axis').selectAll('g').selectAll('line');
+            rlines_barsy.attr('x2', -heightCur*0.06)
         };
 
         function rangefuc(start, end, len) {
