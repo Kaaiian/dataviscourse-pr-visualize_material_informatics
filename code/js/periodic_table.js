@@ -156,7 +156,7 @@ class Periodic_table {
             .attr("dx", d=> widthCur*0.05)
             .attr('class', d => d.symbol + " tilestext")
             .style('font-size', d=>heightCur*0.4+'px')
-            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
+            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'black'})
             .text(d =>  d.symbol)
 
         
@@ -169,7 +169,7 @@ class Periodic_table {
             .attr('class', "tilestext")
             .attr('text-anchor', 'start')
             .style('font-size', d=>heightCur*0.2+'px')
-            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'red'})
+            .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'black'})
             .text(d =>  d.name);
 
         bars            
