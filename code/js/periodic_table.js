@@ -256,7 +256,7 @@ class Periodic_table {
 
 
         function updateBarsCharts(){
-            that.svg.select("#resid_bars").selectAll("*").remove();
+          
             if(that.selectedElements.length == 0){
                 that.dict = []
                 d3.csv("data/experimental_predictions.csv").then(temp => {update_dict(temp);});
@@ -334,6 +334,7 @@ class Periodic_table {
         };
 
         function update_residView(){
+            that.svg.select("#resid_bars").selectAll("*").remove();
             let widthCur = parseInt(that.svgWidth/20);
             let heightCur =parseInt(that.svgHeight/12);
             let how_many = that.barHeight_list.length;
