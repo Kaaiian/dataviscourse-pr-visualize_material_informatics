@@ -29,12 +29,15 @@ class TSNE {
             .attr("height", this.svgHeight)
             .attr('id', 'TSNE_Chart_svg') 
             
+        
+            
         let plot_area = this.svg.append('g').attr('id', 'tsne_plot')
         let plot_data = this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_data')
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_xaxis')
         let tsne_compounds = plot_data.append('g').attr('id', 'tsne_compounds')
 
         // this.svg.select('#tsne_plot').append('g').attr('id', 'ideal prediction').append('line').attr('x1', this.margin.left).attr('y1', this.svgHeight-this.margin.bottom).attr('x2', this.svgWidth - this.margin.right).attr('y2', this.margin.top).attr('stroke', 'black').style("stroke-dasharray", ("3, 3"))
+        
         
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_top_xaxis')
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_bottom_xaxis')
@@ -82,6 +85,7 @@ class TSNE {
         
         this.svg.call(this.tip)
     };
+    
     
 
     tooltip_render (tooltip_data) {
@@ -170,8 +174,8 @@ class TSNE {
         let component_1 = []
         let component_2 = []
         let actual = []
-        let predicted = []
-        let residual = []
+        let predicted = [.attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
+        let residual = [].attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
         
         let elementData = element_data.map(formula => {
             component_1.push(parseFloat(formula['component_1']))
