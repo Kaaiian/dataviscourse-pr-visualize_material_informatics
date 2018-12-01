@@ -1,13 +1,7 @@
 class Info {
 
-    /**
-     * Initializes the svg elements required to lay the tiles
-     * @param ptable instance of ptable
-     * and to populate the legend.
-     */
     constructor(){
-        // Follow the constructor method in yearChart.js
-        // assign class 'content' in style.css to tile chart
+        //Create the svg and margin for info feature.
         this.margin = {top: 5, right: 5, bottom: 5, left: 5};
         let Info_box = d3.select("#Info_Box").classed("info_view", true);
         this.svgBounds = Info_box.node().getBoundingClientRect();
@@ -25,6 +19,7 @@ class Info {
         let text_area5 = this.svg.append('g').attr('id', 'text_area5')
         
         
+        //Create the link to the database
         text_area1.append("a")
             .attr("xlink:href", "https://pubs.acs.org/doi/suppl/10.1021/acs.jpclett.8b00124",'_blank')
             .append("rect")  
@@ -47,6 +42,8 @@ class Info {
             .style("pointer-events", "none")
             .text("Data");
 
+
+         //Create the link to the github.
         text_area2.append("a")
             .attr("xlink:href", "https://github.com/kaaiian/dataviscourse-pr-visualize_material_informatics",'_blank')
             .append("rect")  
@@ -70,6 +67,7 @@ class Info {
             .text("The Scourse Code");
 
 
+        //Create the link to the Kaai's email
         text_area3.append("a")
             .attr("xlink:href", "mailto:jkkauwe@gmail.com",'_blank')
             .append("rect")  
@@ -92,6 +90,7 @@ class Info {
             .style("pointer-events", "none")
             .text("Steven K. Kauwe's Email");
 
+         //Create the link to the Yucheng's email
         text_area4.append("a")
             .attr("xlink:href", "mailto:dominate0704@gmail.com",'_blank')
             .append("rect")  
@@ -114,6 +113,8 @@ class Info {
             .style("pointer-events", "none")
             .text("Yucheng Yang's Email");
 
+
+         //Create the link to the youtube tutorial videa.    
         text_area5.append("a")
             .attr("xlink:href", "https://www.youtube.com/watch?v=gLSGHfJ0DaU&t=4s",'_blank')
             .append("rect")  

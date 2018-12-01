@@ -1,26 +1,13 @@
 
-/*let votePercentageChart = new VotePercentageChart();
-
-let tileChart = new TileChart();
-
-let shiftChart = new TrendChart();
-
-let electoralVoteChart = new ElectoralVoteChart(shiftChart);*/
-
 let act_vs_pre = new Act_Vs_Pre();
 let linegraph = new Linegraph();
 let info = new Info();
 let tsne = new TSNE(linegraph);
 // let tsne = new TSNE();
 
-//load the data corresponding to all the election years
-//pass this data and instances of all the charts that update on year selection to yearChart's constructor
+//load the data corresponding to all the elements
+//pass this data and instances of all the charts that update on element selection to periodic's constructor
 d3.csv("data/ptable.csv").then(ptable => {
-    //Domain definition for global color scale
-    function rangefuc(start, end, len) {
-        var step = Math.floor((end - start) / len)
-        return Array(len).fill().map((_, idx) => start + (idx * step))
-    }
     var domain =  [-100, 1, 10, 40, 80, 200, 500, 1000 ,1600];
 
     //Color range for global color scale

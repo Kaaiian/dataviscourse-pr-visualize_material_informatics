@@ -7,9 +7,8 @@ class Periodic_table {
      * and to populate the legend.
      */
     
-    constructor(ptable, act_vs_pre, line_graph, info, tsne){
-        // Follow the constructor method in yearChart.js
-        // assign class 'content' in style.css to tile chart
+    constructor(ptable, act_vs_pre,line_graph, info, tsne){
+        //Create the svg and margin for Periodic_table.
         this.margin = {top: 10, right: 5, bottom: 20, left: 5};
         let divyearChart = d3.select("#Periodic_Table_Chart").classed("ptable_view", true);
         this.svgBounds = divyearChart.node().getBoundingClientRect();
@@ -49,33 +48,12 @@ class Periodic_table {
 
 
     /**
-     * Creates tiles and tool tip for each state, legend for encoding the color scale information.
+     * update the element which is selected or hoverOver
      *
      * @param colorScale global quantile scale based on the winning margin between republicans and democrats
      */
     update (colorScale){
 
-        //for reference:https://github.com/Caged/d3-tip
-        //Use this tool tip element to handle any hover over the chart
-
-        // ******* TODO: PART IV *******
-        // Transform the legend element to appear in the center 
-        // make a call to this element for it to display.
-
-        // Lay rectangles corresponding to each state according to the 'row' and 'column' information in the data.
-        // column is coded as 'Space' in the data.
-
-        // Display the state abbreviation and number of electoral votes on each of these rectangles
-
-        // Use global color scale to color code the tiles.
-
-        // HINT: Use .tile class to style your tiles;
-        // .tilestext to style the text corresponding to tiles
-
-        //Call the tool tip on hover over the tiles to display stateName, count of electoral votes
-        //then, vote percentage and number of votes won by each party.
-        //HINT: Use the .republican, .democrat and .independent classes to style your elements.
-        //Creates a legend element and assigns a scale that needs to be visualized
         this.svg.selectAll("*").remove();
         let widthCur = parseInt(this.svgWidth/20);
         let heightCur =parseInt(this.svgHeight/12);
@@ -94,6 +72,7 @@ class Periodic_table {
             .append("g")
             .attr("id", "color_bars");
 
+        //Create the colorbars which represent the colorscale.
         color_bars.append('g').attr('id', 'title_of_colors_bar');
         let title_group = color_bars.select('#title_of_colors_bar');
         title_group.append('text')
@@ -104,7 +83,7 @@ class Periodic_table {
             .style('text-anchor', 'middle')
             .text(d=>"Number of Formulae Containing Each Element");
 
-
+        //Make the bars for the colorbars, and the length of bar represent the frequence.
         let c_bars =  color_bars.selectAll('rect').data(domain1);
         c_bars.enter()
             .append('rect')
@@ -134,7 +113,7 @@ class Periodic_table {
         let bars = ptable_bars.selectAll('g').data(this.ptable).enter().append('g');
 
         
-
+        //Make the bars for each elements.
 
         bars
             .append("rect")
@@ -147,7 +126,7 @@ class Periodic_table {
 
         
 
-       
+        //Make the text for each elements which will be correlated with the bars.
         bars
             .append('text')
             .attr("y", d=> d.row*heightCur+heightCur*0.5)
@@ -171,6 +150,7 @@ class Periodic_table {
             .style('fill', function(d){if(d.count > 0){ return '#565656'} return 'black'})
             .text(d =>  d.name);
 
+        //Set the clich mouseover and mouse out event for every elements' bars.
         bars            
             .on('click', onClick)
             .on("mouseover", hoverOver)
@@ -186,6 +166,7 @@ class Periodic_table {
 
         let that = this
         
+        //The click function will highlight the element bar which is selected.
         function onClick(d){
                 
             function removeA(arr) {
@@ -227,7 +208,7 @@ class Periodic_table {
             selectedCircle.classed("highlighted",false);
         }
 
-
+        // updateBarsCharts makes the residual bars with the residual data.
         function updateBarsCharts(){
           
             if(that.selectedElements.length == 0){
@@ -249,12 +230,14 @@ class Periodic_table {
             window.setTimeout(update_axis,500);
         };
 
+        // update_dict read the data about the selected elements.
         function update_dict(data){
             data.forEach(function(item){
                 that.dict[item.formula] = item;
            });
         };
 
+        // update_axis find the max and min about the selected elements's residual value and then ask to redraw the residual bars.
         function update_axis(){
             that.dict_axis = [];
             let max_d = -12;
@@ -274,6 +257,7 @@ class Periodic_table {
             update_residView();
         };
 
+        //update_barsH make the data which will represent the numbers of formulae in each residual range.
         function update_barsH(count){
             let how_many = 5;
             if(count >20){
@@ -301,6 +285,7 @@ class Periodic_table {
             
         };
 
+        //update_residView will redraw the bars for each residual range and the axis.
         function update_residView(){
             that.svg.select("#resid_bars").selectAll("*").remove();
             let widthCur = parseInt(that.svgWidth/20);
@@ -370,7 +355,9 @@ class Periodic_table {
             let rlines_barsy = resibar.select('#y_axis').selectAll('g').selectAll('line');
             rlines_barsy.attr('x2', -heightCur*0.06)
         };
+        
 
+        // a helper function to create the array based on start number, end number and length of the array.
         function rangefuc(start, end, len) {
             var step = ((end - start) / len)
             return Array(len).fill().map((_, idx) => start + (idx * step))
