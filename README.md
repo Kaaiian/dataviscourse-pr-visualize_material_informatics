@@ -8,11 +8,11 @@ The code is found in the "code" folder. The code folder contains the html, css, 
 
 ### Data: 
 
-Can be found in code/data/. The main data are stored as .csv files. Data for individual elements are stored in the element_data hist_data folders.
+Data can be found in code/data/. The main data are stored as .csv files. Data for individual elements are stored in the element_data hist_data folders.
 
 ### Process Book: 
 
-Process Book is found under "notes&reports" titled: Process Book.pdf
+The process book is found under "notes&reports" titled: Process Book.pdf
 
 ### Important Links:
 
