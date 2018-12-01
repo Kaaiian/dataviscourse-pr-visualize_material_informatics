@@ -28,11 +28,13 @@ class Act_Vs_Pre {
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'top_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'bottom_xaxis')
         this.svg.select('#act_vs_pred_xaxis').append('g').attr('id', 'xlabel').append('text').text('Experimental Band Gap').attr("transform", "translate(" + this.svgWidth*0.55 + "," + (this.svgHeight*1 - 5) + ")").style("text-anchor", "middle")
+        .style('font-size', d=>this.svgWidth* 0.04+'px')
 
         this.svg.select('#act_vs_pred_plot').append('g').attr('id', 'act_vs_pred_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'left_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'right_yaxis')
         this.svg.select('#act_vs_pred_yaxis').append('g').attr('id', 'ylabel').append('text').text('Predicted Band Gap').attr("transform", "rotate(-90)").attr("x", -this.svgHeight*0.45).attr('dy', (this.svgWidth*0 + 15)).style("text-anchor", "middle")
+        .style('font-size', d=>this.svgWidth* 0.04+'px')
 		this.tip = d3.tip().attr('class', 'd3-tip')
 			.direction('s')
 			.offset(function() {

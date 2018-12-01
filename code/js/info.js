@@ -20,6 +20,8 @@ class Info {
             
         let text_area1 = this.svg.append('g').attr('id', 'text_area1')
         let text_area2 = this.svg.append('g').attr('id', 'text_area2')
+        let text_area3 = this.svg.append('g').attr('id', 'text_area3')
+        let text_area4 = this.svg.append('g').attr('id', 'text_area4')
         
         
         text_area1.append("a")
@@ -42,7 +44,7 @@ class Info {
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .style("pointer-events", "none")
-            .text("Extracting Knowledge from DFT");
+            .text("Data From: Extracting Knowledge from DFT");
 
         text_area2.append("a")
             .attr("xlink:href", "https://github.com/kaaiian/dataviscourse-pr-visualize_material_informatics",'_blank')
@@ -65,6 +67,50 @@ class Info {
             .attr("text-anchor", "middle")
             .style("pointer-events", "none")
             .text("The Scourse Code");
-        
+
+
+        text_area3.append("a")
+            .attr("xlink:href", "mailto:jkkauwe@gmail.com",'_blank')
+            .append("rect")  
+            .attr("x", this.margin.left+this.svgWidth/5*2)
+            .attr("y", this.margin.top)
+            .attr("height", this.svgHeight/30)
+            .attr("width", this.svgWidth/5)
+            .style("fill", "gray")
+            .attr("rx", 10)
+            .attr("ry", 10);
+
+        // draw text on the screen
+        text_area3.append("text")
+            .attr("x", this.svgWidth/10+this.svgWidth/5*2)
+            .attr("y", this.svgHeight/50)
+            .style("fill", "black")
+            .style("font-size", this.svgWidth/100+'px')
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .style("pointer-events", "none")
+            .text("Steven K. Kauwe's Email");
+
+        text_area4.append("a")
+            .attr("xlink:href", "mailto:dominate0704@gmail.com",'_blank')
+            .append("rect")  
+            .attr("x", this.margin.left+3*this.svgWidth/5)
+            .attr("y", this.margin.top)
+            .attr("height", this.svgHeight/30)
+            .attr("width", this.svgWidth/5)
+            .style("fill", "gray")
+            .attr("rx", 10)
+            .attr("ry", 10);
+
+        // draw text on the screen
+        text_area4.append("text")
+            .attr("x", this.svgWidth/10+3*this.svgWidth/5)
+            .attr("y", this.svgHeight/50)
+            .style("fill", "black")
+            .style("font-size", this.svgWidth/100+'px')
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .style("pointer-events", "none")
+            .text("Yucheng Yang's Email");
     };
 }
