@@ -16,5 +16,5 @@ Process Book is found under notes and reports titled: Process Book.pdf
 
 ### Important Links:
 
-Youtube: https://www.youtube.com/watch?v=gLSGHfJ0DaU&t=33s
+Youtube: https://youtu.be/gLSGHfJ0DaU
 Website: https://kaaiian.github.io/
