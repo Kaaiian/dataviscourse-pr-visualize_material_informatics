@@ -31,7 +31,6 @@ class Linegraph {
         let dict_number = []
         selected.forEach(function(item){
             let temparray = item.elements.split(" ");
-            console.log(temparray);
             temparray.forEach( function(ele){
                 if(dictresid.hasOwnProperty(ele)){
                     dictresid[ele] = dictresid[ele]+Math.abs(item.residual);
@@ -43,12 +42,10 @@ class Linegraph {
                 }
             });
         });
-        console.log(dictnumber);
-        console.log(dictresid);
         let max_d = -12;
         let min_d = 12;
         let count = 0;
-        let str = ""
+
         Object.keys(dictresid).forEach(function(key) {
             let avearge = dictresid[key]/dictnumber[key]
             if(max_d < avearge){
@@ -60,15 +57,10 @@ class Linegraph {
             dict_name.push(key)
             dict_number.push(avearge);
             count++
-            str = str+ key+", "
         });
-        str = str.slice(0, -2) + '.';
         let dict_axis = [Math.floor(min_d),Math.floor(max_d) +1]
         let domain1 = rangefuc(0,dict_axis[1],count);
         domain1.push(dict_axis[1]);
-
-        console.log(domain1);
-
 
 
         d3.select("#line_svg").selectAll("*").remove();
@@ -88,12 +80,11 @@ class Linegraph {
             .attr('y', heightCur*0.1)
             .style('font-size', d=>heightCur*0.1+'px')
             .style('fill','black')
-            .text(d=>"Average residual for selection (grouped by element): "+ str);
+            .text(d=>"Average residual for selection (grouped by element): ");
 
         resibar.append('g').attr('id', 'body_of_graph');
     
         let r_group = resibar.select('#body_of_graph');
-        console.log(dict_number)
         let r_bars =  r_group.selectAll('rect').data(dict_number);
         r_bars.enter()
             .append('rect')
@@ -106,12 +97,13 @@ class Linegraph {
             .style('stroke-width',1);
 
         let r_Text =  r_group.selectAll('text').data(dict_name);
+        let size = Math.min(this.svgHeight*0.04,widthCur*0.5)
         r_Text
             .enter()
             .append('text')
             .attr("y", this.svgHeight)
             .attr("x", (d,i)=>this.svgWidth*0.05+i*widthCur+widthCur*0.2)
-            .style('font-size', d=>widthCur*0.5+'px')
+            .style('font-size', d=> size+'px')
             .text(d=> d);
 
 

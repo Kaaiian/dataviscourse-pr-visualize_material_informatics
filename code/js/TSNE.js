@@ -113,7 +113,6 @@ class TSNE {
     }
     
     update(element_data){
-        console.log('element data', element_data)
         this.current_element_data = element_data
         this.plot_data(element_data, this.colorScaleResidual)
 
@@ -130,30 +129,20 @@ class TSNE {
             let data = d3.select('#TSNE_Chart').selectAll('svg').selectAll('#tsne_data').selectAll('circle')
             let selected = []
 
-            console.log("data: ", data);
-
             data.attr('opacity', function(d) {
-                // console.log(d3.select(this).attr('class'))
                 let classes = d3.select(this).attr('class')
-                console.log(classes)
                 if (classes.includes('nothidden')){
                                         
                     let x = parseFloat(d3.select(this).attr('cx'))
                     let y = parseFloat(d3.select(this).attr('cy'))
 
-                    // console.log('x, y', x, y)
                     if (isSelected(coords, x, y) == true){
-                        // console.log('selected?', isSelected(coords, x, y))
                         selected.push(d)
-                    }else{
-                        // console.log('false selected', isSelected(coords, x, y), coords, d3.select(this).attr('x'))
                     }
-                return 1
-                    
-                }else{}
+                    return 1     
+                }
             })
 
-            console.log('selected elements', selected)
 
             function isSelected(coords, x, y){
                 let x0 = coords[0][0],
@@ -164,10 +153,8 @@ class TSNE {
                 return x0 <= x && x <= x1 && y0 <= y && y <= y1
             }
 
-            console.log("1: ",selected)
             linegraph.update(selected)
 
-            console.log('brush selection scaled to domain: ', coords)
             
         // We have the x axis data from brushing now
         // .....
