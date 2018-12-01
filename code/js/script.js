@@ -8,9 +8,9 @@ let shiftChart = new TrendChart();
 let electoralVoteChart = new ElectoralVoteChart(shiftChart);*/
 
 let act_vs_pre = new Act_Vs_Pre();
-let linegraph = '';
+let linegraph = new Linegraph();
 let info = new Info();
-let tsne = new TSNE();
+let tsne = new TSNE(linegraph);
 // let tsne = new TSNE();
 
 //load the data corresponding to all the election years

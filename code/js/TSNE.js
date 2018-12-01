@@ -1,8 +1,11 @@
 class TSNE {
     
-    constructor(){
+    constructor(linegraph){
         // Follow the constructor method in tsne.js
         // assign class 'content' in style.css to tile chart
+        
+        
+        this.linegraph = linegraph;
         this.margin = {top: 10, right: 10, bottom: 45, left: 45};
         let tsne = d3.select("#TSNE_Chart").classed("tsne_view", true);
         this.svgBounds = tsne.node().getBoundingClientRect();
@@ -53,17 +56,17 @@ class TSNE {
                 .text('Component 2').attr("transform", "rotate(-90)").attr("x", -this.svgHeight*0.45).attr('dy', (this.svgWidth*0 + 15)).style("text-anchor", "middle")
                 .style('font-size', d=>this.svgWidth* 0.04+'px')
         
-        let buttons = d3.select('#Buttons').append('svg')
+        let buttons = tsne.append('svg')
             .attr('id', 'buttons_svg')
             .attr('width', this.svgWidth)
-            .attr('height', 30)
+            .attr('height', this.svgWidth*0.06)
 
         let that = this 
         buttons.append('rect')
             .attr('x', this.svgWidth/4)
             .attr('y', '0')
-            .attr('width', this.svgWidth/2)
-            .attr('height', this.svgWidth*0.04)
+            .attr('width', this.svgWidth*0.7)
+            .attr('height', this.svgWidth*0.06)
             .attr('fill', 'silver')
             .attr('stroke', 'black')
             .on('click', d => this.buttonClick(d, that))
@@ -72,7 +75,7 @@ class TSNE {
             .attr('x', this.svgWidth/3.5)
             .attr('y', this.svgWidth*0.02)
             .style('alignment-baseline', "middle")
-            .style('font-size', d=>this.svgWidth* 0.02+'px')
+            .style('font-size', d=>this.svgWidth* 0.03+'px')
             // .style('')
             .text('"toggle displayed values" bandgap/residual (eV)')
             .on('click', d => this.buttonClick(d, that))
@@ -161,7 +164,8 @@ class TSNE {
                 return x0 <= x && x <= x1 && y0 <= y && y <= y1
             }
 
-            console.log(selected)
+            console.log("1: ",selected)
+            linegraph.update(selected)
 
             console.log('brush selection scaled to domain: ', coords)
             
