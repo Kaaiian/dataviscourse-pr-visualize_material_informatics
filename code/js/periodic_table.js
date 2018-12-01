@@ -7,7 +7,7 @@ class Periodic_table {
      * and to populate the legend.
      */
     
-    constructor(ptable, act_vs_pre, info, tsne){
+    constructor(ptable, act_vs_pre, line_graph, info, tsne){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
         this.margin = {top: 10, right: 5, bottom: 20, left: 5};
@@ -20,6 +20,7 @@ class Periodic_table {
             .attr("height", this.svgHeight)
         this.ptable = ptable;
         this.act_vs_pre = act_vs_pre;
+        this.line_graph = line_graph;
         this.info = info;
         this.tsne = tsne;
         this.selectedElements = []
