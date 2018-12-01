@@ -47,14 +47,14 @@ class TSNE {
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_bottom_xaxis')
         this.svg.select('#tsne_xaxis').append('g').attr('id', 'tsne_xlabel').append('text')
                 .text('Component 1').attr("transform", "translate(" + this.svgWidth*0.55 + "," + (this.svgHeight*1 - 5) + ")").style("text-anchor", "middle")
-                .style('font-size', d=>this.svgWidth* 0.01+'px')
+                .style('font-size', d=>this.margin.bottom*0.2+'px')
 
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_yaxis')
         this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_left_yaxis')
         this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_right_yaxis')
         this.svg.select('#tsne_yaxis').append('g').attr('id', 'tsne_ylabel').append('text')
                 .text('Component 2').attr("transform", "rotate(-90)").attr("x", -this.svgHeight*0.45).attr('dy', (this.svgWidth*0 + 15)).style("text-anchor", "middle")
-                .style('font-size', d=>this.svgWidth* 0.01+'px')
+                .style('font-size', d=>this.margin.left*0.2+'px')
         
         let buttons = tsne.append('svg')
             .attr('id', 'buttons_svg')
@@ -217,7 +217,7 @@ class TSNE {
         this.svg.select("#tsne_colorbar").remove();
 
         let legendQuantile = d3.legendColor()
-            .shapeWidth((this.svgWidth - 2*this.margin.left - this.margin.right)/20)
+            .shapeWidth(this.margin.left*0.2)
             .shapeHeight((this.svgHeight - this.margin.top - this.margin.bottom)/8)
             .cells(7)
             .orient('vertical')
@@ -227,7 +227,7 @@ class TSNE {
             .attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.5) + ',' + (2*this.margin.top) + ')');
 
         d3.select("#tsne_colorbar")
-            .style('font-size', d=>this.svgWidth* 0.005+'px')
+            .style('font-size', d=>this.margin.left* 0.2+'px')
             .call(legendQuantile);
 
         let text_thing = d3.select("#tsne_colorbar").selectAll('.cell').selectAll('.label')

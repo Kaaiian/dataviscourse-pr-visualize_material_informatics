@@ -76,7 +76,7 @@ class Linegraph {
         let heightCur =parseInt(this.svgHeight*0.75);
 
         let range1 = ['#fcfbfd','#efedf5','#dadaeb','#bcbddc','#9e9ac8','#807dba','#6a51a3','#4a1486'];
-        let domain2 = [0,0.1,0.2,0.5,1,2,4,12]
+        let domain2 = [0,0.1,0.2,0.5,0.9,2,3,8]
         let colorScale1 = d3.scaleLinear()
             .domain(domain2)
             .range(range1);
@@ -98,7 +98,7 @@ class Linegraph {
         r_bars.enter()
             .append('rect')
             .attr('x', (d,i)=>this.svgWidth*0.05+i*widthCur)
-            .attr('y', d=>heightCur-d*heightCur/dict_axis[1])
+            .attr('y', d=>this.svgHeight*0.2+heightCur-d*heightCur/dict_axis[1])
             .attr('width',widthCur)
             .attr('height', d=>d*heightCur/dict_axis[1])
             .style('fill', d=> colorScale1(d))
@@ -109,15 +109,15 @@ class Linegraph {
         r_Text
             .enter()
             .append('text')
-            .attr("y", this.svgHeight*0.8)
-            .attr("x", (d,i)=>this.svgWidth*0.05+i*widthCur+widthCur*0.3)
+            .attr("y", this.svgHeight)
+            .attr("x", (d,i)=>this.svgWidth*0.05+i*widthCur+widthCur*0.2)
             .style('font-size', d=>widthCur*0.5+'px')
             .text(d=> d);
 
 
         let yScale = d3.scaleLinear()
             .domain([Math.max.apply(null, domain1), 0])     
-            .range([heightCur*0.2, heightCur*1])
+            .range([this.svgHeight*0.2, this.svgHeight*0.95])
             .nice()
 
         let yAxis_left = d3.axisLeft(yScale).tickSizeOuter(0);
