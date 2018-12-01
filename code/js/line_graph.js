@@ -8,11 +8,11 @@ class Linegraph {
     constructor(){
         // Follow the constructor method in yearChart.js
         // assign class 'content' in style.css to tile chart
-        this.margin = {top: 5, right: 5, bottom: 5, left: 5};
+        this.margin = {top: 5, right: 5, bottom: 15, left: 5};
         let line_chart = d3.select("#Line_chart").classed("line_graph_view", true);
         this.svgBounds = line_chart.node().getBoundingClientRect();
         this.svgWidth = this.svgBounds.width - this.margin.left - this.margin.right;
-        this.svgHeight = this.svgBounds.width - this.margin.top - this.margin.bottom;
+        this.svgHeight = this.svgBounds.width/4 - this.margin.top - this.margin.bottom;
         this.svg = line_chart.append("svg")
             .attr("width", this.svgWidth)
             .attr("height", this.svgHeight)
@@ -27,7 +27,8 @@ class Linegraph {
     update(selected){
         let dictresid =[]
         let dictnumber = []
-        let dict =[]
+        let dict_name =[]
+        let dict_number = []
         selected.forEach(function(item){
             let temparray = item.elements.split(" ");
             console.log(temparray);
@@ -47,6 +48,7 @@ class Linegraph {
         let max_d = -12;
         let min_d = 12;
         let count = 0;
+        let str = ""
         Object.keys(dictresid).forEach(function(key) {
             let avearge = dictresid[key]/dictnumber[key]
             if(max_d < avearge){
@@ -55,11 +57,14 @@ class Linegraph {
             if(min_d > avearge){
                 min_d = avearge
             }
-            dict[key] = avearge;
+            dict_name.push(key)
+            dict_number.push(avearge);
             count++
+            str = str+ key+", "
         });
+        str = str.slice(0, -2) + '.';
         let dict_axis = [Math.floor(min_d),Math.floor(max_d) +1]
-        let domain1 = rangefuc(dict_axis[0],dict_axis[1],count);
+        let domain1 = rangefuc(0,dict_axis[1],count);
         domain1.push(dict_axis[1]);
 
         console.log(domain1);
@@ -67,12 +72,11 @@ class Linegraph {
 
 
         d3.select("#line_svg").selectAll("*").remove();
-        let widthCur = parseInt(svgWidth/20);
-        let heightCur =parseInt(svgHeight/12);
-        let how_many = barHeight_list.length;
-        let x_rate = widthCur*5/how_many;
+        let widthCur = parseInt((this.svgWidth*0.95)/(count));
+        let heightCur =parseInt(this.svgHeight*0.75);
+
         let range1 = ['#fcfbfd','#efedf5','#dadaeb','#bcbddc','#9e9ac8','#807dba','#6a51a3','#4a1486'];
-        let domain2 = [0,2,5,20,60,100,180,300]
+        let domain2 = [0,0.1,0.2,0.5,1,2,4,12]
         let colorScale1 = d3.scaleLinear()
             .domain(domain2)
             .range(range1);
@@ -80,59 +84,53 @@ class Linegraph {
         resibar.append('g').attr('id', 'title_of_resid_bar');
         let rtitle_group = resibar.select('#title_of_resid_bar');
         rtitle_group.append('text')
-            .attr('x', widthCur*5)
-            .attr('y', heightCur*0.3)
-            .style('font-size', d=>heightCur*0.3+'px')
+            .attr('x', 0)
+            .attr('y', heightCur*0.1)
+            .style('font-size', d=>heightCur*0.1+'px')
             .style('fill','black')
-            .style('text-anchor', 'middle')
-            .text(d=>"Plot for Residual: "+text);
+            .text(d=>"Average residual for selection (grouped by element): "+ str);
+
+        resibar.append('g').attr('id', 'body_of_graph');
     
-        let rate = (heightCur*3.2)/(Math.max.apply(null, barHeight_list));
-
-
-        let r_bars =  resibar.selectAll('rect').data(barHeight_list);
+        let r_group = resibar.select('#body_of_graph');
+        console.log(dict_number)
+        let r_bars =  r_group.selectAll('rect').data(dict_number);
         r_bars.enter()
             .append('rect')
-            .attr('x', (d,i)=>widthCur*3.5+i*x_rate)
-            .attr('y', d=>heightCur*3.6-d*rate)
-            .attr('width',x_rate)
-            .attr('height', d=>d*rate)
+            .attr('x', (d,i)=>this.svgWidth*0.05+i*widthCur)
+            .attr('y', d=>heightCur-d*heightCur/dict_axis[1])
+            .attr('width',widthCur)
+            .attr('height', d=>d*heightCur/dict_axis[1])
             .style('fill', d=> colorScale1(d))
             .style( 'stroke', '#101010')
             .style('stroke-width',1);
-        r_bars.attr("transform", 
-        "translate(" + widthCur + "," +heightCur + ")");
 
-        let xScale = d3.scaleLinear()
-            .domain([dict_axis[0], dict_axis[1]])
-            .range([widthCur*3.5,widthCur*9])
-            .nice()
+        let r_Text =  r_group.selectAll('text').data(dict_name);
+        r_Text
+            .enter()
+            .append('text')
+            .attr("y", this.svgHeight*0.8)
+            .attr("x", (d,i)=>this.svgWidth*0.05+i*widthCur+widthCur*0.3)
+            .style('font-size', d=>widthCur*0.5+'px')
+            .text(d=> d);
+
+
         let yScale = d3.scaleLinear()
-            .domain([Math.max.apply(null, barHeight_list), 0])     
-            .range([heightCur*0.4, heightCur*3.6])
+            .domain([Math.max.apply(null, domain1), 0])     
+            .range([heightCur*0.2, heightCur*1])
             .nice()
-        let xAxis = d3.axisTop(xScale).tickSizeOuter(0);
+
         let yAxis_left = d3.axisLeft(yScale).tickSizeOuter(0);
-            
-        resibar.append('g').classed('axis', true)
-                .attr('id', 'x_axis')
-                .attr('transform', "translate("+0+"," + heightCur*3.6 + ")").call(xAxis)
-                .style('font-size', d=>heightCur*0.16+'px')
-                .style('text-anchor', 'middle');
-        let rtext_bars = resibar.select('#x_axis').selectAll('g').selectAll('text');
-        rtext_bars.attr('y', heightCur*0.16)
-        let rlines_bars = resibar.select('#x_axis').selectAll('g').selectAll('line');
-        rlines_bars.attr('y2', heightCur*0.06)
 
         resibar.append('g').classed('axis', true)
                 .attr('id', 'y_axis')
-                .attr('transform', "translate("+widthCur*3.5+"," +0 + ")").call(yAxis_left)
-                .style('font-size', d=>heightCur*0.16+'px')
+                .attr('transform', "translate("+this.svgWidth*0.05+"," +0 + ")").call(yAxis_left)
+                .style('font-size', d=>this.svgHeight*0.05+'px')
                 .style('text-anchor', 'middle');
         let rtext_barsy = resibar.select('#y_axis').selectAll('g').selectAll('text');
-        rtext_barsy.attr('x', -heightCur*0.16)
+        rtext_barsy.attr('x', -this.svgWidth*0.02)
         let rlines_barsy = resibar.select('#y_axis').selectAll('g').selectAll('line');
-        rlines_barsy.attr('x2', -heightCur*0.06)
+        rlines_barsy.attr('x2', -this.svgWidth*0.01)
         
 
 

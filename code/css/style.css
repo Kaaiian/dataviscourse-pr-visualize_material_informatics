@@ -32,9 +32,10 @@
 }
 
 .line_graph_view {
-    display: inline-block;
+    /* display: inline-block;
     width: 45%;
-    position: relative;
+    position: relative; */
+    grid-area: e;
 }
 
 .tsne_view {

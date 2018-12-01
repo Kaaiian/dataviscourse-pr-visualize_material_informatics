@@ -22,15 +22,16 @@ class Info {
         let text_area2 = this.svg.append('g').attr('id', 'text_area2')
         let text_area3 = this.svg.append('g').attr('id', 'text_area3')
         let text_area4 = this.svg.append('g').attr('id', 'text_area4')
+        let text_area5 = this.svg.append('g').attr('id', 'text_area5')
         
         
         text_area1.append("a")
-            .attr("xlink:href", "https://chemrxiv.org/articles/Extracting_Knowledge_from_DFT_Experimental_Band_Gap_Predictions_Through_Ensemble_Learning/7236029",'_blank')
+            .attr("xlink:href", "https://pubs.acs.org/doi/suppl/10.1021/acs.jpclett.8b00124",'_blank')
             .append("rect")  
             .attr("x", this.margin.left)
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
-            .attr("width", this.svgWidth/5)
+            .attr("width", this.svgWidth/6)
             .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
@@ -44,22 +45,22 @@ class Info {
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .style("pointer-events", "none")
-            .text("Data From: Extracting Knowledge from DFT");
+            .text("Data");
 
         text_area2.append("a")
             .attr("xlink:href", "https://github.com/kaaiian/dataviscourse-pr-visualize_material_informatics",'_blank')
             .append("rect")  
-            .attr("x", this.margin.left+this.svgWidth/5)
+            .attr("x", this.margin.left+this.svgWidth/6)
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
-            .attr("width", this.svgWidth/5)
+            .attr("width", this.svgWidth/6)
             .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
 
         // draw text on the screen
         text_area2.append("text")
-            .attr("x", this.svgWidth/10+this.svgWidth/5)
+            .attr("x", this.svgWidth/10+this.svgWidth/6)
             .attr("y", this.svgHeight/50)
             .style("fill", "black")
             .style("font-size", this.svgWidth/100+'px')
@@ -72,17 +73,17 @@ class Info {
         text_area3.append("a")
             .attr("xlink:href", "mailto:jkkauwe@gmail.com",'_blank')
             .append("rect")  
-            .attr("x", this.margin.left+this.svgWidth/5*2)
+            .attr("x", this.margin.left+this.svgWidth/6*2)
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
-            .attr("width", this.svgWidth/5)
+            .attr("width", this.svgWidth/6)
             .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
 
         // draw text on the screen
         text_area3.append("text")
-            .attr("x", this.svgWidth/10+this.svgWidth/5*2)
+            .attr("x", this.svgWidth/10+this.svgWidth/6*2)
             .attr("y", this.svgHeight/50)
             .style("fill", "black")
             .style("font-size", this.svgWidth/100+'px')
@@ -94,17 +95,17 @@ class Info {
         text_area4.append("a")
             .attr("xlink:href", "mailto:dominate0704@gmail.com",'_blank')
             .append("rect")  
-            .attr("x", this.margin.left+3*this.svgWidth/5)
+            .attr("x", this.margin.left+3*this.svgWidth/6)
             .attr("y", this.margin.top)
             .attr("height", this.svgHeight/30)
-            .attr("width", this.svgWidth/5)
+            .attr("width", this.svgWidth/6)
             .style("fill", "gray")
             .attr("rx", 10)
             .attr("ry", 10);
 
         // draw text on the screen
         text_area4.append("text")
-            .attr("x", this.svgWidth/10+3*this.svgWidth/5)
+            .attr("x", this.svgWidth/10+3*this.svgWidth/6)
             .attr("y", this.svgHeight/50)
             .style("fill", "black")
             .style("font-size", this.svgWidth/100+'px')
@@ -112,5 +113,27 @@ class Info {
             .attr("text-anchor", "middle")
             .style("pointer-events", "none")
             .text("Yucheng Yang's Email");
+
+        text_area5.append("a")
+            .attr("xlink:href", "https://www.youtube.com/watch?v=gLSGHfJ0DaU&t=4s",'_blank')
+            .append("rect")  
+            .attr("x", this.margin.left+4*this.svgWidth/6)
+            .attr("y", this.margin.top)
+            .attr("height", this.svgHeight/30)
+            .attr("width", this.svgWidth/6)
+            .style("fill", "gray")
+            .attr("rx", 10)
+            .attr("ry", 10);
+
+        // draw text on the screen
+        text_area5.append("text")
+            .attr("x", this.svgWidth/10+4*this.svgWidth/6)
+            .attr("y", this.svgHeight/50)
+            .style("fill", "black")
+            .style("font-size", this.svgWidth/100+'px')
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .style("pointer-events", "none")
+            .text("Youtube Tutorial");
     };
 }
