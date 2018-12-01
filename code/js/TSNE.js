@@ -10,6 +10,7 @@ class TSNE {
         this.svgHeight = parseInt(this.svgWidth);
         this.buttonClicked = 'true'
         this.activeButton = 'residual'
+        this.selectedElements = []
         this.colorScaleResidual = d3.scaleLinear()
             .domain([2, 1, 0.5, 0, 0.5, 1, -2])
             .range(['#084594', '#2171b5', '#4292c6', 'gray', '#8c6bb1','#88419d','#6e016b'])
@@ -25,7 +26,7 @@ class TSNE {
         this.activeColorScale = this.colorScaleResidual
 
         this.svg = tsne.append("svg")
-            .attr("width", this.svgWidth)
+            .attr("width", this.svgBounds.width)
             .attr("height", this.svgHeight)
             .attr('id', 'TSNE_Chart_svg') 
             
@@ -60,19 +61,19 @@ class TSNE {
             .attr('x', this.svgWidth/4)
             .attr('y', '0')
             .attr('width', this.svgWidth/2)
-            .attr('height', '30')
+            .attr('height', this.svgWidth*0.04)
             .attr('fill', 'silver')
             .attr('stroke', 'black')
             .on('click', d => this.buttonClick(d, that))
 
         buttons.append('text')
-            .attr('x', this.svgWidth/4)
-            .attr('y', '15')
+            .attr('x', this.svgWidth/3.5)
+            .attr('y', this.svgWidth*0.02)
             .style('alignment-baseline', "middle")
+            .style('font-size', d=>this.svgWidth* 0.02+'px')
             // .style('')
             .text('"toggle displayed values" bandgap/residual (eV)')
-
-
+            .on('click', d => this.buttonClick(d, that))
 
         this.svg.select('#tsne_plot').append('g').attr('id', 'tsne_colorbar')
             .attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
@@ -127,18 +128,24 @@ class TSNE {
             console.log("data: ", data);
 
             data.attr('opacity', function(d) {
+                // console.log(d3.select(this).attr('class'))
+                let classes = d3.select(this).attr('class')
+                console.log(classes)
+                if (classes.includes('nothidden')){
+                                        
+                    let x = parseFloat(d3.select(this).attr('cx'))
+                    let y = parseFloat(d3.select(this).attr('cy'))
 
-                let x = parseFloat(d3.select(this).attr('cx'))
-                let y = parseFloat(d3.select(this).attr('cy'))
-
-                // console.log('x, y', x, y)
-                if (isSelected(coords, x, y) == true){
-                    // console.log('selected?', isSelected(coords, x, y))
-                    selected.push(d)
-                }else{
-                    // console.log('false selected', isSelected(coords, x, y), coords, d3.select(this).attr('x'))
-                }
+                    // console.log('x, y', x, y)
+                    if (isSelected(coords, x, y) == true){
+                        // console.log('selected?', isSelected(coords, x, y))
+                        selected.push(d)
+                    }else{
+                        // console.log('false selected', isSelected(coords, x, y), coords, d3.select(this).attr('x'))
+                    }
                 return 1
+                    
+                }else{}
             })
 
             console.log('selected elements', selected)
@@ -174,8 +181,8 @@ class TSNE {
         let component_1 = []
         let component_2 = []
         let actual = []
-        let predicted = [].attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
-        let residual = [].attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')')
+        let predicted = []
+        let residual = []
         
         let elementData = element_data.map(formula => {
             component_1.push(parseFloat(formula['component_1']))
@@ -184,15 +191,7 @@ class TSNE {
             residual.push(parseFloat(formula['residual']))
             residual.push(parseFloat(formula['residual']))
         });
-       
-        element_data.sort((a, b) =>{
-            if (b['actual'] === a['actual']) {
-                return a.key < b.key ? -1 : 1
-            } else
-                return - a['actual'] + b['actual'];
-        })
 
-        console.log('got here as well', actual, predicted)
         
         let maxarray1 = d3.max(component_1)
         let maxarray2 = d3.max(component_2)
@@ -219,11 +218,14 @@ class TSNE {
             .labelFormat(d3.format('.3r'))
             .scale(colorScale);
         d3.select('#tsne_plot').append('g').attr('id', 'tsne_colorbar')
-            .attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.9) + ',' + (2*this.margin.top) + ')');
+            .attr('transform', 'translate(' + (this.svgWidth-this.margin.right*0.5) + ',' + (2*this.margin.top) + ')');
 
         d3.select("#tsne_colorbar")
             .style("font-size","12px")
             .call(legendQuantile);
+
+        let text_thing = d3.select("#tsne_colorbar").selectAll('.cell').selectAll('.label')
+            text_thing.attr('x', -this.svgWidth*0.015);
 
         let xScale = d3.scaleLinear()
             .domain([min_component, max_component])
@@ -246,7 +248,6 @@ class TSNE {
             .call(xAxis_bottom)
             xAxis_B.selectAll(".tick line")
                 .attr("transform", "scale(1,-1)")
-
                 
         let xAxis_T = d3.select('#tsne_top_xaxis')
             .attr('transform', "translate(0," + this.margin.top  + ")")
@@ -290,49 +291,49 @@ class TSNE {
             .attr('r', this.svgHeight/125)
             .attr('fill', d => colorScale(d[this.activeButton]))
             .attr('fill-opacity', d => 1)
-            .attr('class', d => {return 'tsne ' + d['formula'] + ' ' +  d['elements']})
+            .attr('class', d => {return 'tsne nothidden ' + d['formula'] + ' ' +  d['elements']})
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide)
     };
     
-    onClick(d, that){
-        
-        if (that.selectedElements.length == 0){
+    onClick(d, that1){
+
+        this.selectedElements = that1.selectedElements
+
+        if (this.selectedElements.length == 0){
             let circle_data = d3.selectAll('#tsne_compounds').selectAll('circle')
-            circle_data.style('visibility', 'visible')
+            circle_data.classed('hidden', false)
+            circle_data.classed('nothidden', true)
             circle_data.classed('clicked', false)
         }else{
-
             let circle_data = d3.selectAll('#tsne_compounds').selectAll('circle')
             circle_data.classed('clicked', false)
-            that.selectedElements.forEach(d => {
+            that1.selectedElements.forEach(d => {
                 let selected_elements = d3.selectAll('#tsne_compounds')
                     .selectAll("."+d)
                     .classed('clicked', true)
-                console.log('selected elements', selected_elements, d)
             })
-            console.log('am I gere?', d3.selectAll('#tsne_compounds').selectAll('circles'))
-            circle_data.style('visibility', 'hidden')
-            d3.selectAll('#tsne_compounds').selectAll('.clicked').style('visibility', 'visible')
+
+            circle_data.classed('hidden', true)
+            circle_data.classed('nothidden', false)
+            d3.selectAll('#tsne_compounds').selectAll('.clicked').classed('hidden', false).classed('nothidden', true)
         }
     };
    
     buttonClick(d, that){
+        let selectedElements = []
         if (that.buttonClicked=='false'){
             that.buttonClicked = 'true';
             that.activeColorScale = that.colorScaleBandGap;
-            console.log('residual?', that.buttonClicked);
             that.activeButton = 'actual'
             this.plot_data(this.current_element_data,this.colorScaleBandGap)
         }else{
             that.buttonClicked = 'false';
             that.activeColorScale = that.colorScaleResidual;
-            console.log('residual?', that.buttonClicked);
             that.activeButton = 'residual'
             this.plot_data(this.current_element_data,this.colorScaleResidual)
         }
-
-        
+        this.onClick(d, this)
     }
 
     hoverOver(d, that){
@@ -342,7 +343,7 @@ class TSNE {
         selected_data.selectAll("*:not(."+d.symbol+')')
             .lower()
             .classed('not_selected', true)
-        selected_data.selectAll('.'+d.symbol).style('visibility', 'visible').raise().classed('selected', true)
+        // selected_data.selectAll('.'+d.symbol).raise().classed('selected', true).classed('hidden', true)
     };
     
     hoverOff(d, that){
@@ -354,7 +355,7 @@ class TSNE {
         selected_data.selectAll('.'+d.symbol).lower().classed('selected', false)
         if (that.selectedElements.length == 0){
         }else{
-        d3.selectAll('#tsne_compounds').selectAll("*:not(.clicked)").style('visibility', 'hidden')
+        // d3.selectAll('#tsne_compounds').selectAll("*:not(.clicked)").classed('hidden', true)
         }
 
     };
