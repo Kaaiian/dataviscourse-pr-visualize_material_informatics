@@ -12,10 +12,9 @@ class TSNE {
         this.activeButton = 'residual'
         this.selectedElements = []
         this.colorScaleResidual = d3.scaleLinear()
-            .domain([2, 1, 0.2, 0, -0.2, -1, -2])
-            .range(['#08306b', '#2171b5', '#6baed6', '#bfd3e6', '#8c96c6','#88419d','#4d004b'])
-            // .range(['#d53e4f','#fc8d59','#fee08b','#ffffbf','#e6f598','#99d594','#3288bd'])
-            
+            .domain([2, 1, 0.5, 0, 0.5, 1, -2])
+            .range(['#084594', '#2171b5', '#4292c6', 'gray', '#8c6bb1','#88419d','#6e016b'])
+
             // ['#f7fbff','#deebf7','#c6dbef','#9ecae1','#6baed6','#4292c6','#2171b5','#084594']
 
             // ['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#6e016b']
