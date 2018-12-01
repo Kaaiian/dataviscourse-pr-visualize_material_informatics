@@ -31,7 +31,6 @@ class Periodic_table {
 
         /* THIS PREPOPULATES THE Act VS Pred Graph while making the Ptable */
         d3.csv("data/experimental_predictions.csv").then(element_data => {
-            //console.log('update act_vs_pred', element_data)
             this.act_vs_pre.update(element_data);
             this.tsne.update(element_data);
         });
@@ -184,30 +183,6 @@ class Periodic_table {
             .labelFormat(d3.format('.1r'))
             .scale(colorScale);
 
-        function click(d) {
-            console.log("clicked")
-            var selectedCircle = d3.select(this).select('rect')
-
-            if (d.count >0){
-                selectedCircle.classed("highlighted",true);
-                console.log(d.symbol)
-                d3.csv("data/element_data/"+d.symbol+".csv").then(elementTable => {
-                    console.log(elementTable);
-                    updateBarsCharts(elementTable);
-                    act_vs_pre.update(elementTable);
-                    //tsne.update(elementTable);
-                    //line_graph.update(elementTable);
-                });
-
-            }
-           
-            /*d3.csv("data/year_timeline_"+d.YEAR+".csv").then(electionResult => {
-                console.log(electionResult);
-                electoralVoteChart.update(electionResult, colorScale);
-                votePercentageChart.update(electionResult);
-                tileChart.update(electionResult, colorScale);
-            });*/
-        }
 
         let that = this
         
@@ -226,8 +201,6 @@ class Periodic_table {
 
             let selected = d3.select(this).select('rect')
             if (that.selectedElements.includes(d.symbol)){
-                console.log('preremoval', that.selectedElements)
-                console.log('postremoval', removeA(that.selectedElements, d.symbol))
                 that.selectedElements = removeA(that.selectedElements, d.symbol)
                 selected.classed("highlighted",false);
             }else{
@@ -280,7 +253,6 @@ class Periodic_table {
             data.forEach(function(item){
                 that.dict[item.formula] = item;
            });
-           //console.log(that.dict)
         };
 
         function update_axis(){
@@ -288,7 +260,6 @@ class Periodic_table {
             let max_d = -12;
             let min_d = 12;
             let count = 0;
-            console.log('diction waiting check:',that.dict)
             Object.keys(that.dict).forEach(function(key) {
                 if(max_d < that.dict[key]['residual']){
                     max_d = that.dict[key]['residual']
@@ -299,7 +270,6 @@ class Periodic_table {
                 count++;
             });
             that.dict_axis = [Math.floor(min_d),Math.floor(max_d) +1]
-            console.log('haha '+that.dict_axis);
             update_barsH(count);
             update_residView();
         };
@@ -318,7 +288,6 @@ class Periodic_table {
 
             let domain1 = rangefuc(that.dict_axis[0],that.dict_axis[1],how_many);
             domain1.push(that.dict_axis[1]);
-            console.log(domain1.toString())
             let i = 0;
             that.barHeight_list = Array(how_many).fill(0);
             Object.keys(that.dict).forEach(function(key) {
@@ -329,7 +298,6 @@ class Periodic_table {
                     }
                 }
             });
-            console.log('haha1 '+that.barHeight_list)
             
         };
 
@@ -354,8 +322,7 @@ class Periodic_table {
                 .style('fill','black')
                 .style('text-anchor', 'middle')
                 .text(d=>"Plot for Residual: "+that.text);
-            
-            console.log(Math.max.apply(null, that.barHeight_list))   
+        
             let rate = (heightCur*3.2)/(Math.max.apply(null, that.barHeight_list));
     
     
