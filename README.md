@@ -4,7 +4,7 @@ Yucheng Yang and Kaai Kauwe
 
 ### Code: 
 
-The code is found in the 'code' folder. The code folder contains the html, css, and js files. The data is also stored as a subfolder
+The code is found in the "code" folder. The code folder contains the html, css, and js files. The data is also stored as a subfolder
 
 ### Data: 
 
@@ -12,9 +12,10 @@ Can be found in code/data/. The main data are stored as .csv files. Data for ind
 
 ### Process Book: 
 
-Process Book is found under notes and reports titled: Process Book.pdf
+Process Book is found under "notes&reports" titled: Process Book.pdf
 
 ### Important Links:
 
 Youtube: https://youtu.be/gLSGHfJ0DaU
+
 Website: https://kaaiian.github.io/
